@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="renderer" content="webkit" />
     <link rel="icon" href="">
-    <title>全民家族管理系统-家族成员审批</title>
+    <title>全民家族管理系统-批量导入主播</title>
 
     <!-- CSS -->
     <link rel="stylesheet" href="css/bootstrap.css">
@@ -165,7 +165,7 @@
                                     <option value="account">帐号</option>
                                     <option value="phone">手机号</option>
                                 </select> -->
-                                <div class="form-group has-feedback inline-blok search-box" style="position:relative;">
+                               <div class="form-group has-feedback inline-blok search-box" style="position:relative;">
                                     <label class="sr-only" for="search">搜索</label>
                                     <input class="form-control search-input" placeholder="全名ID" type="text" id="header-search" />
                                     <input class="form-control search-input" placeholder="全名呢称" type="text" id="header-search" />
@@ -174,7 +174,7 @@
                                         <option value="">所有222</option>
                                     </select>
                                    <select name="" id="" class="select-search">
-                                        <option value="">审核中</option>
+                                        <option value="">距离合同到期天数</option>
                                         <option value="">所有222</option>
                                     </select>
                                   
@@ -187,77 +187,93 @@
                      <table class="table gimi-table table-striped" id="tableSort">
                         <thead>
                             <tr>
-                              
+                                 <th>
+                                    <input id="userAll-mycheckbox" data-color="yellow" type="checkbox" class="checkbix" data-text="">
+                                </th>
                                 <th class="table-sort sort-both sort-down" type="number">序号</th>
-                                <th>主播UID</th>
-                    
-                                <th>主播昵称</th>
-                                <th>增减类型</th>
-                                <th>认证信息</th>
-                                <th>申请日期</th>
+                                <th>ID</th>
+                                <th>昵称</th>
+                                <th>主播类别</th>
+                                <th>首次开播时间</th>
+                                <th>直播状态</th>
+                                <th>角色</th>
+                                <th>主播来源</th>
+                                <th>所属经纪人</th>
+                                <th>等级</th>
+                                   <th>认证信息</th>
+                                <th>合作方式</th>
                                 <th>本期合同周期</th>
-                               
+                                <th>主播签署日期</th>
+                                <th>试用期</th>
+                                <th>合同状态</th>
+                              
                                 <th>操作</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="">
                             <tr>
-                               
+                                <td>
+                                    <input id="" name="user-contorl" data-color="yellow" type="checkbox" class="checkbix" data-text="">
+                                </td>
                                 <td>0001</td>
                               
-                                <td>222222</td>
-                                <td>男的范德萨</td>
+                                <td>耿直BOY</td>
+                                <td>男</td>
                                 <td>1990-02-01</td>
-                               
-                                <td class="color-blue"><a href="anchor_msg.html?item=nav-line-11">查看</a></td>
+                                <td class="table-text">曾经获得迪尼斯全球最能吃奖曾经获得迪尼斯全球最能吃奖</td>
+                                <td>北京</td>
+                                <td>2399</td>
+                                <td>123</td>
+                                <td>github</td>
+                                <td>******</td>
+                                <td class="color-blue"><a href="atte_msg.html?item=nav-line-10">查看</a></td>
                                 <td>1991-02-01</td>
                                 <td class="text-blue">23</td>
-                                
-                              
+                                <td class="text-blue">23</td>
+                                <td class="text-blue">23</td>
+                                <td class="text-green">正常</td>
                                 <td class="membership-edit">
                                     <!--<a href="" class="user-edit" style="font-size:14px;">推荐</a>-->
-                                    
-                                      <a href="edit_people.html?item=nav-line-10&item=1" class="user-edit" style="font-size:14px;">同意</a>
-                                    <a  class="user-edit" style="font-size:14px;">驳回</a>
+                                     <a href="edit_people.html?item=nav-line-10&item=1" class="">编辑</a>
+                                      <a href="" class="user-edit" style="font-size:14px;">移除</a>
+                                        <a href="check_contract.html?item=nav-line-10" class="">查看合同</a>
+                                         <a href="check_contract.html?item=nav-line-10" class="">导入主播</a>
                                           
                                 </td>
                             </tr>
-                               <tr>
-                               
+                             <tr>
+                                <td>
+                                    <input id="user1-mycheckbox" name="user-contorl" data-color="yellow" type="checkbox" class="checkbix" data-text="">
+                                </td>
                                 <td>0001</td>
                               
-                                <td>222222</td>
-                                <td>男的范德萨</td>
+                                <td>耿直BOY</td>
+                                <td>男</td>
                                 <td>1990-02-01</td>
-                               
-                                <td class="color-blue"><a href="anchor_msg.html?item=nav-line-11">查看</a></td>
+                                <td class="table-text">曾经获得迪尼斯全球最能吃奖曾经获得迪尼斯全球最能吃奖</td>
+                                <td>北京</td>
+                                <td>2399</td>
+                                <td>123</td>
+                                <td>github</td>
+                                <td>******</td>
+                                <td class="color-blue"><a href="atte_msg.html?item=nav-line-10">查看</a></td>
                                 <td>1991-02-01</td>
                                 <td class="text-blue">23</td>
-                                
-                              
+                                <td class="text-blue">23</td>
+                                <td class="text-blue">23</td>
+                                <td class="text-green">正常</td>
                                 <td class="membership-edit">
                                     <!--<a href="" class="user-edit" style="font-size:14px;">推荐</a>-->
-                                    
-                                      <a href="edit_people.html?item=nav-line-10&item=1" class="user-edit" style="font-size:14px;">编辑</a>
-                                    <a  href="sign_contact.html?item=nav-line-10&item=1"  style="font-size:14px;">签署合同</a>
+                                     <a href="edit_people.html?item=nav-line-10&item=1" class="">编辑</a>
+                                      <a href="" class="user-edit" style="font-size:14px;">移除</a>
+                                        <a href="check_contract.html?item=nav-line-10" class="">查看合同</a>
+                                         <a href="check_contract.html?item=nav-line-10" class="">导入主播</a>
                                           
                                 </td>
                             </tr>
+                            
                         </tbody>
                     </table>
-                      <div class="content-footer">
-                        <div class="page-text">
-                            当前显示 <span id="page-star">1</span> 到 <span id="page-end">9</span> 条，共 <span id="page-all">12</span>                            条记录。
-                        </div>
-                        <div class="page-btn">
-                            <a href="" class="btn btn-yellow">上一页</a>
-                            <a href="" class="btn btn-yellow active">1</a>
-                            <a href="" class="btn btn-yellow">2</a>
-                            <a href="" class="btn btn-yellow">3</a>
-                            <a href="" class="btn btn-yellow">4</a>
-                            <a href="" class="btn btn-yellow">下一页</a>
-                        </div>
-                    </div>
                 </div>
             </div>
 
@@ -269,7 +285,7 @@
     <!--弹窗-->
     <div class="modal-log-box">
         <div class="modal-cont">
-            <p>确定同意或驳回该成员申请吗？</p>
+            <p>确定移除该成员吗？</p>
            
             <div class="modal-btn-box">
                 <a href="#">确定</a>

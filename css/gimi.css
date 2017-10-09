@@ -670,6 +670,7 @@ p{
 .gimi-table  > tbody > tr > td > .user-edit{
     color: #8A65E1;
     font-size: 22px;
+    cursor: pointer;
 }
 
 .gimi-table  > tbody > tr > td.table-text{

@@ -386,3 +386,16 @@
     border-radius: 5px;
     font-size: 18px;
 }
+.chanle-btn{
+        display: flex;
+    width: 300px;
+    height: 40px;
+    margin: 20px 0;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    background: #ccc;
+    border-radius: 5px;
+    font-size: 18px;
+    margin-left: 10px;
+}

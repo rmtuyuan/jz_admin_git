@@ -32,8 +32,15 @@
                   format(new Date());
               
                   if($("#Clock_2").length>0){
-                             format2(new Date());
+                        format2(new Date());
                   }
+                  $(".quit-login").click(function () {
+                      //退出登录
+                      //清除缓存
+                      window.location.href="login.html";
+
+                  })
+                  //加载时间 和头像
              
            });
     // 左侧开关按钮
@@ -157,7 +164,7 @@
     });
 
 
-    // 用户管理全选
+    // 用户管理全选 user1-mycheckbox
     $('#userAll-mycheckbox').change(function () {
         if (this.checked == true) {
             selectAll('user-contorl', 'all');
