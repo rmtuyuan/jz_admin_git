@@ -1,3 +1,22 @@
+// 提示框的 逻辑
+function showInfo(text) {
+    $("body").addClass("overflow-hidden");
+    $(".info-text").html(text);
+    $(".modal-info").show();
+
+}
+$(".info-sure").click(function (e) {
+    e.preventDefault();
+    $("body").removeClass("overflow-hidden");
+    $(".modal-info").hide();
+});
+
+function openHref(url) {
+    $(".info-sure-2").click(function (e) {
+        e.preventDefault();
+        window.location.href = url;
+    });
+}
 (function ($) {
     //获取url参数的封装函数
     //decodeURI() 和 decodeURIComponent()
@@ -152,7 +171,7 @@ var Anchor_atte = {
 
 
     },
-   
+
     uploadImg: function () {
         //上传图片 显示图片
         $(".img-box-btn>input").change(function (e) {
@@ -208,7 +227,7 @@ var Anchor_atte = {
 
         });
     },
-   
+
     allSubmitClick: function () {
         //点击提交  判断是否都填写完成 
         $("#all_submit_btn").click(function (e) {
@@ -264,10 +283,451 @@ var Anchor_atte = {
     }
 }
 
+//公告板 
+var Public_notice = {
+    init: function () {
+
+        var form_2 = new FormData();
+        form_2.append("login_uid", atteRolu.login_uid); // 
+        form_2.append("login_token", atteRolu.login_token); //
+        fetch(server + "/user/authentication", {
+            method: 'POST',
+            //headers: myHeaders,
+            mode: 'cors',
+            cache: 'default',
+            body: form_2
+        }).then((response) => response.json()).then(function (data) {
+            if (data.code == 200) {
+                // 成功  渲染页面
+            } else if (data.code == 400) {
+                showInfo(data.message);
+            } else {
+                showInfo('当前网络不稳定,提交失败,请重新提交');
+            }
+
+        });
+
+        //点击 去掉new字
+
+    }
+    
+}
+
+
+//首页功能
+
+var Family_index = {
+    init: function () {
+        //家族首页
+        //            var form = new FormData();
+        //     form.append("uid", uid); // 
+
+        //     fetch(server + "/user/my_info", {
+        //         method: 'POST',
+        // //      headers: { 'Accept': 'application/json',
+        // //      'Content-Type': 'application/json'},
+        //         mode: 'cors',
+        //         cache: 'default',
+        //         body: form
+        //     }).then((response) => response.json()).then(function (data) {
+        //         //console.log(data);
+        //         if (data.code == 200) {
+        //             console.log(data);
+        //         }
+        //     });
+    }
+};
+
+//家族设置
+var Family_setting={
+    init:function () {  
+        this.DataLoad();
+        this.CheckInput();
+        this.Img_upload();
+        this.ClickSubmit();
+    },
+    DataLoad:function () {  
+        //显示头像昵称
+            //            var form = new FormData();
+        //     form.append("uid", uid); // 
+
+        //     fetch(server + "/user/my_info", {
+        //         method: 'POST',
+        // //      headers: { 'Accept': 'application/json',
+        // //      'Content-Type': 'application/json'},
+        //         mode: 'cors',
+        //         cache: 'default',
+        //         body: form
+        //     }).then((response) => response.json()).then(function (data) {
+        //         //console.log(data);
+        //         if (data.code == 200) {
+        //             console.log(data);
+        //         }
+        //     });
+    },
+    CheckInput:function () {  
+            $(".fs-text-input").keyup(function () {
+
+            if ($(this).val().length > 0) {
+                $(this).addClass("actived");
+                $(this).removeClass("erroed");
+                $(this).css("color", "#333");
+
+            } else {
+                $(this).removeClass("actived");
+                $(this).addClass("erroed");
+                $(this).css("color", "#fe426f");
+            }
+        });
+
+        $(".fs-text-input").blur(function () {
+
+            if ($(this).val().length > 0) {
+                $(this).addClass("actived");
+                $(this).removeClass("erroed");
+                $(this).css("color", "#333");
+            } else {
+                $(this).removeClass("actived");
+                $(this).addClass("erroed");
+                $(this).css("color", "#fe426f");
+            }
+        });
+    },
+    Img_upload:function () {  
+        //上传图片
+          $(".fs-img-file").change(function (e) {
+            var imgPath = $(this).val();
+            var ipt = $(this);
+            if (imgPath == "") {
+                showInfo('请选择上传图片!');
+                //alert("请选择上传图片！");
+                return;
+            }
+            //判断上传文件的后缀名
+            var strExtension = imgPath.substr(imgPath.lastIndexOf('.') + 1);
+            if (strExtension != 'jpg' && strExtension != 'gif' &&
+                strExtension != 'png' && strExtension != 'bmp' && strExtension != 'JPG' && strExtension != 'PNG') {
+                showInfo('请选择图片文件!');
+                // alert("请选择图片文件");
+                return;
+            } else {
+                for (var n = 0; n < this.files.length; n++) {
+                    var fileObj = this.files[n];
+                    var imgUrl = window.URL.createObjectURL(this.files[n]);
+                    var form_2 = new FormData();
+                    // ipt.parent().siblings(".img-box").find("div").css("background", "url(" + imgUrl + ") no-repeat").css("background-size", "100% 100%").find("img").attr("src", imgUrl)
+                    form_2.append("login_uid", atteRolu.login_uid);
+                    form_2.append("login_token", atteRolu.login_token);
+                    form_2.append("file", fileObj);
+                    fetch(server + "/file/upload", {
+                        method: 'POST',
+                        //headers: myHeaders,
+                        mode: 'cors',
+                        cache: 'default',
+                        body: form_2
+                    }).then((response) => response.json()).then(function (data) {
+                        //console.log(data);
+                        // atteRolu[ipt.attr("name")]=222;
+                        //  console.log(atteRolu.pic_id_front);
+                        if (data.code == 200) {
+                            //添加图片 
+                            ipt.parent().siblings(".img-box").find("div").css("background", "url(" + data.data.url + ") no-repeat").css("background-size", "100% 100%").find("img").attr("src", data.data.url);
+                            ipt.addClass("actived").removeClass("erroed");
+                            atteRolu[ipt.attr("name")] = data.data.url;
+
+
+                        } else {
+                            ipt.addClass("erroed").removeClass("actived");
+                            showInfo('当前网络不稳定,上传失败,请重新上传');
+                        }
+
+                    });
+
+                }
+            }
+
+        });
+    },
+    ClickSubmit:function () {  
+        //点击提交按钮
+          //点击提交  判断是否都填写完成 
+        $(".fs-atte-submit").click(function (e) {
+            e.preventDefault();
+            // 判断是否都填写完成 
+
+            if ($(".fs-input").length == $(".fs-input.actived").length) {
+                //都填了 fetch   跳转
+                var form_2 = new FormData();
+                for (var j = 0; j < $(".fs-input.actived").length; j++) {
+                    var element = $($(".fs-input.actived")[j]);
+                    form_2.append(element.attr("name"), element.val()); // 
+                }
+             
+                form_2.append("login_uid", atteRolu.login_uid); // 
+                form_2.append("login_token", atteRolu.login_token); //
+                fetch(server + "/user/authentication", {
+                    method: 'POST',
+                    //headers: myHeaders,
+                    mode: 'cors',
+                    cache: 'default',
+                    body: form_2
+                }).then((response) => response.json()).then(function (data) {
+                    if (data.code == 200) {
+                        // 成功 跳转网页
+                        alert("提交成功");
+                        window.location.href = 'attestation_after.html?login_uid=' + atteRolu.login_uid + "&login_token=" + atteRolu.login_token;
+
+                    } else if (data.code == 400) {
+                        showInfo(data.message);
+                    } else {
+                        showInfo('当前网络不稳定,提交失败,请重新提交');
+                    }
+
+                });
+
+
+            } else {
+                //有没填 的 
+                if ($($(".fs-input.erroed")[0]).hasClass("fs-img-file")) {
+                    //图片没上传
+                    showInfo( "logo没上传");
+
+                } else {
+                    //其他没填写
+                    showInfo($($(".fs-input.erroed")[0]).siblings("p").html() + "没填写");
+                }
+            }
+
+        });
+    }
+    
+};
+
+//家族信息完善
+var Family_msg_done={ 
+    init:function () { 
+        this.DataLoad();
+     },
+     DataLoad:function () {  
+         //显示数据
+           //            var form = new FormData();
+        //     form.append("uid", uid); // 
+
+        //     fetch(server + "/user/my_info", {
+        //         method: 'POST',
+        // //      headers: { 'Accept': 'application/json',
+        // //      'Content-Type': 'application/json'},
+        //         mode: 'cors',
+        //         cache: 'default',
+        //         body: form
+        //     }).then((response) => response.json()).then(function (data) {
+        //         //console.log(data);
+        //         if (data.code == 200) {
+        //             console.log(data);
+        //         }
+        //     });
+     }
+};
+
+//成员管理
+var Membership={
+    init:function () {  
+
+    },
+    searchSome:function () {  
+        //上面搜索框
+    },
+    DataLoad:function () { 
+        //数据加载
+     },
+    ClickSearch:function () {  
+        //查询 相关
+    },
+    editSome:function () {  
+        //操作的各个按钮
+       
+        //编辑 
+    },
+    Atte_msg:function () {  
+        //认证信息 显示数据
+         //            var form = new FormData();
+        //     form.append("uid", uid); // 
+
+        //     fetch(server + "/user/my_info", {
+        //         method: 'POST',
+        // //      headers: { 'Accept': 'application/json',
+        // //      'Content-Type': 'application/json'},
+        //         mode: 'cors',
+        //         cache: 'default',
+        //         body: form
+        //     }).then((response) => response.json()).then(function (data) {
+        //         //console.log(data);
+        //         if (data.code == 200) {
+        //             console.log(data);
+        //         }
+        //     });
+    },
+    AddJjr:function () {  
+        // 添加经纪人
+             //   var form = new FormData();
+        //     form.append("uid", uid); // 
+
+        //     fetch(server + "/user/my_info", {
+        //         method: 'POST',
+        // //      headers: { 'Accept': 'application/json',
+        // //      'Content-Type': 'application/json'},
+        //         mode: 'cors',
+        //         cache: 'default',
+        //         body: form
+        //     }).then((response) => response.json()).then(function (data) {
+        //         //console.log(data);
+        //         if (data.code == 200) {
+        //             console.log(data);
+        //         }
+        //     });
+
+    },
+    Check_contract:function () {  
+        //查看合同
+           //   var form = new FormData();
+        //     form.append("uid", uid); // 
+
+        //     fetch(server + "/user/my_info", {
+        //         method: 'POST',
+        // //      headers: { 'Accept': 'application/json',
+        // //      'Content-Type': 'application/json'},
+        //         mode: 'cors',
+        //         cache: 'default',
+        //         body: form
+        //     }).then((response) => response.json()).then(function (data) {
+        //         //console.log(data);
+        //         if (data.code == 200) {
+        //             console.log(data);
+        //         }
+        //     });
+    },
+    Del_people:function () {  
+        //移除成员
+    },
+    Edit_people:function () {  
+        //编辑成员
+    },
+    Batch_anchor:function () {  
+        //导入主播 
+        //显示数据
+        //点击 checkbox 导入
+    }
+
+};
+
+//成员增减审批
+var People_add={
+    init:function () {  
+        
+    }, 
+     searchSome:function () {  
+        //上面搜索框
+    },
+    Atte_msg:function () {
+        //点击编辑  
+        //认证信息 显示数据
+         //    var form = new FormData();
+        //     form.append("uid", uid); // 
+
+        //     fetch(server + "/user/my_info", {
+        //         method: 'POST',
+        //         headers: { 'Accept': 'application/json',
+        //        'Content-Type': 'application/json'},
+        //         mode: 'cors',
+        //         cache: 'default',
+        //         body: form
+        //     }).then((response) => response.json()).then(function (data) {
+        //         //console.log(data);
+        //         if (data.code == 200) {
+        //             console.log(data);
+        //         }
+        //     });
+
+    },
+    Sign_contact:function () {  
+        //签署合同
+
+    },
+    Edit_agree:function () {  
+        //同意或者驳回
+
+          //    var form = new FormData();
+        //     form.append("uid", uid); // 
+
+        //     fetch(server + "/user/my_info", {
+        //         method: 'POST',
+        //         headers: { 'Accept': 'application/json',
+        //        'Content-Type': 'application/json'},
+        //         mode: 'cors',
+        //         cache: 'default',
+        //         body: form
+        //     }).then((response) => response.json()).then(function (data) {
+        //         //console.log(data);
+        //         if (data.code == 200) {
+        //             console.log(data);
+        //         }
+        //     });
+    }
+
+
+}
+
+//成员月数据
+var People_month_data={
+    init:function () {  
+
+    },
+    searchSome:function () {  
+        //上面搜索框
+    },
+    DataLoad:function () {  
+        //数据加载 
+    }
+}
+
+//成员天数据
+var People_day_data={
+    init:function () {  
+
+    },
+    searchSome:function () {  
+        //上面搜索框
+    },
+    DataLoad:function () {  
+        //数据加载 
+    }
+}
+
+//家族收入来源
+var Famliy_income={
+    init:function () {  
+
+    },
+    searchSome:function () {  
+        //上面搜索
+    },
+    DataLoad:function () {  
+        //表格数据加载
+    }
+}
+
+
 
 $(function () {
     //
     login_uid = $.getUrlParam("login_uid"); //更新 uid
-    Comment.init();
-    Index.init();
+    // Comment.init();
+    // Index.init();
+    // Public_notice.init(); //公告
+    // Family_index.init(); //家族首页
+    // Family_setting.init();//家族设置
+    // Family_msg_done.init(); //家族信息完善 
+    
+       
 });
+

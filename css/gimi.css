@@ -164,6 +164,7 @@ input[type=checkbox].checkbix:checked+label>span:before{
 input[type=checkbox].checkbix[data-color=yellow]:checked+label>span {
     background: #FFBD02;
 }
+
 input[type=checkbox].checkbix[data-color=purple]:checked+label>span {
     background: #8A65E1;
 }

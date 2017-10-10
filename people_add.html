@@ -217,8 +217,8 @@
                                 <td class="membership-edit">
                                     <!--<a href="" class="user-edit" style="font-size:14px;">推荐</a>-->
                                     
-                                      <a href="edit_people.html?item=nav-line-10&item=1" class="user-edit" style="font-size:14px;">同意</a>
-                                    <a  class="user-edit" style="font-size:14px;">驳回</a>
+                                      <a href="#" data-showmodal='agree-people-modal' class="user-edit" style="font-size:14px;">同意</a>
+                                    <a  class="user-edit" data-showmodal='not-agree-people-modal' style="font-size:14px;">驳回</a>
                                           
                                 </td>
                             </tr>
@@ -238,8 +238,8 @@
                                 <td class="membership-edit">
                                     <!--<a href="" class="user-edit" style="font-size:14px;">推荐</a>-->
                                     
-                                      <a href="edit_people.html?item=nav-line-10&item=1" class="user-edit" style="font-size:14px;">编辑</a>
-                                    <a  href="sign_contact.html?item=nav-line-10&item=1"  style="font-size:14px;">签署合同</a>
+                                      <a href="edit_people.html?item=nav-line-11&item=1"  style="font-size:14px;">编辑</a>
+                                    <a  href="sign_contact.html?item=nav-line-11&item=1"  style="font-size:14px;">签署合同</a>
                                           
                                 </td>
                             </tr>
@@ -267,9 +267,19 @@
     </section>
 
     <!--弹窗-->
-    <div class="modal-log-box">
+    <div class="modal-log-box agree-people-modal">
         <div class="modal-cont">
-            <p>确定同意或驳回该成员申请吗？</p>
+            <p>确定同意该成员申请吗？</p>
+           
+            <div class="modal-btn-box">
+                <a href="#">确定</a>
+                 <a href="#" class="quit-modal">取消</a>
+            </div>
+        </div>
+    </div>
+     <div class="modal-log-box not-agree-people-modal">
+        <div class="modal-cont">
+            <p>确定驳回该成员申请吗？</p>
            
             <div class="modal-btn-box">
                 <a href="#">确定</a>
@@ -298,7 +308,7 @@
             $(".user-edit").click(function (e) {  
                 //
                 e.preventDefault();
-                $('.modal-log-box').show();
+                $("."+$(this).data("showmodal")).show();
             });
              $(".quit-modal").click(function (e) {  
                 //

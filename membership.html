@@ -179,6 +179,7 @@
                                     </select>
                                   
                                    <a href="#">查询</a>
+                                    <a href="#" data-showmodal="add-people-modal" class="user-edit" style="margin-left:10px; background:#369;width:100px;">添加经纪人</a>
                                 </div>
                             </form>
                         </div>
@@ -231,7 +232,7 @@
                                 <td class="membership-edit">
                                     <!--<a href="" class="user-edit" style="font-size:14px;">推荐</a>-->
                                      <a href="edit_people.html?item=nav-line-10&item=1" class="">编辑</a>
-                                      <a href="" class="user-edit" style="font-size:14px;">移除</a>
+                                      <a href="" data-showmodal="del-people-modal" class="user-edit" style="font-size:14px;">移除</a>
                                         <a href="check_contract.html?item=nav-line-10" class="">查看合同</a>
                                          <a href="batch_anchor.html?item=nav-line-10" class="">导入主播</a>
                                           
@@ -240,6 +241,22 @@
                             
                         </tbody>
                     </table>
+
+                     <div class="content-footer">
+                        <div class="page-text">
+                            当前显示 <span id="page-star">1</span> 到 <span id="page-end">9</span> 条，共 <span id="page-all">12</span>                            条记录。
+                        </div>
+                        <div class="page-btn">
+                            <a href="" class="btn btn-yellow">上一页</a>
+                            <a href="" class="btn btn-yellow active">1</a>
+                            <a href="" class="btn btn-yellow">2</a>
+                            <a href="" class="btn btn-yellow">3</a>
+                            <a href="" class="btn btn-yellow">4</a>
+                            <a href="" class="btn btn-yellow">下一页</a>
+                        </div>
+                    </div>
+
+
                 </div>
             </div>
 
@@ -249,12 +266,26 @@
     </section>
 
     <!--弹窗-->
-    <div class="modal-log-box">
+    <div class="modal-log-box del-people-modal">
         <div class="modal-cont">
             <p>确定移除该成员吗？</p>
            
             <div class="modal-btn-box">
                 <a href="#">确定</a>
+                 <a href="#" class="quit-modal">取消</a>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal-log-box add-people-modal">
+        <div class="modal-cont" style="padding:10px 0;">
+            <p style="margin:10px 0;">
+                <input type="text" placeholder="输入经纪人ID" class="add-jjr-input" >
+            </p>
+           
+            <div class="modal-btn-box">
+                <a href="#">添加</a>
                  <a href="#" class="quit-modal">取消</a>
             </div>
         </div>
@@ -280,7 +311,7 @@
             $(".user-edit").click(function (e) {  
                 //
                 e.preventDefault();
-                $('.modal-log-box').show();
+               $("."+$(this).data("showmodal")).show();
             });
              $(".quit-modal").click(function (e) {  
                 //
