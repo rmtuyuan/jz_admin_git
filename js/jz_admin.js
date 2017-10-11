@@ -299,6 +299,9 @@ var Public_notice = {
         }).then((response) => response.json()).then(function (data) {
             if (data.code == 200) {
                 // 成功  渲染页面
+                var a_fram=document.createDocumentFragment();//代码片段  
+
+
             } else if (data.code == 400) {
                 showInfo(data.message);
             } else {
