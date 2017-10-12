@@ -102,11 +102,18 @@
     min-height: 50px;
     align-items: center;
 }
-
+.notice-info-con>li{
+        min-height: 40px;
+}
+.notice-info-con>li i.visihidden{
+    visibility: hidden;
+}
 .atte-info-con>li:first-child {
     align-items: flex-start;
 }
-
+.notice-info-con>li:first-child {
+    align-items:center;
+}
 .atte-info-con>li>p {
     width: 10%;
     margin-right: 5%;
@@ -247,6 +254,8 @@ th {
     margin-left: -150px;
     border-radius: 5px;
     background: #fff;
+    z-index: 100;
+  
 }
 
 .modal-cont>p {
@@ -548,7 +557,15 @@ input[type=checkbox].checkbix+label>span {
     align-items: center;
     color: #fe426f;
 }
-
+.modal-close-modal{
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom:0;
+    /*background: rgba(0, 0, 0, .5);*/
+       z-index: 10;
+}
 
 /*模态框*/
 

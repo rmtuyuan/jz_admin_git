@@ -26,6 +26,12 @@
           $(".left-side").load('left_side.html',function () {  
               var item_active=$.getUrlParam("item");
               $("."+item_active).addClass("active").siblings("li").removeClass('active');
+              var leng=$("li.active").attr("class").split(" ")[0].split("-")[2];
+             
+              if(leng>12){
+                 $('.left-side').scrollTop( $('.left-side')[0].scrollHeight );
+              }
+              
           });
            $(".main-header").load('main_header.html',function () {  
              

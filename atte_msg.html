@@ -158,47 +158,51 @@
                     </div>
                     <ul>
                         <li>1、信息认证后方可加入家族，并获得更多推荐机会</li>
-                        <li>2、信息认证后方可加入家族，并获得更多推荐机会</li>
-                        <li>3、信息认证后方可加入家族，并获得更多推荐机会 信息认证后方可加入家族，并获得更多推荐机会
+                        <li>2、同一身份认证信息的账号中，仅一个可加入家族。</li>
+                        <li>3、身份认证信息是提现及其他保证自身利益的重要凭证;如因身份信息不符等造成的一切后果均需自行负责，请务必真实有效填写！
                         </li>
                     </ul>
                 </div>
                 <ul class="atte-info-con">
                      <li>
                         <p>花椒ID:</p>
-                        <span>1111223</span>
+                        <span class="number-in" data-item="number" ></span>
                     </li>
                     <li style=" align-items: flex-start;">
                         <p>头像:</p>
                         <div class="img-logo-box">
-                            <img src="img/h5share_img_banner_list.jpg" alt="">
+                            <img class="img-logo-src" src="" alt="">
                         </div>
                     </li>
                     <li>
                         <p>昵称:</p>
-                        <span>哈哈哈恍恍惚惚</span>
+                        <span  class="nickName-in"></span>
                     </li>
                     <li>
                         <p>性别:</p>
-                        <span>男</span>
+                        <span class="gender-in">  </span>
+                    </li>
+                     <li>
+                        <p>年龄:</p>
+                        <span class="age-in"></span>
                     </li>
                     <li>
                         <p>真实姓名:</p>
-                      <span>张丢就丢</span>
+                      <span class="realName-in"></span>
                     </li>
-                    <li>
+                    <!--<li>
                         <p>QQ号:</p>
                       <span>21212412</span>
                     </li>
                     <li>
                         <p>微信号:</p>
                       <span>21212412</span>
-                    </li>
+                    </li>-->
                     <li>
                         <p>手机号:</p>
-                       <span>12321212412</span>
+                       <span class="mobile-in">12321212412</span>
                     </li>
-                    <li>
+                    <!--<li>
                         <p>支付宝账户:</p>
                         <span>12321212412</span>
                     </li>
@@ -209,35 +213,36 @@
                     <li>
                         <p>电子邮箱:</p>
                        <span>131412412@qq.com</span>
+                    </li>-->
                     <li>
                         <p>证件类型:</p>
                       <span>身份证</span>
                     </li>
                     <li>
                         <p>证件号码:</p>
-                         <span>12321212412</span>
+                         <span class="idCard-in"></span>
                     </li>
                     <li>
                         <p></p>
                         <div class="img-file-box-con id_card">
                             <div class="img-file-box">
-                                <div>
-                                    <input type="file">
+                                <div class="picIdBack-in" style="background: url("") no-repeat;">
+                                 
                                 </div>
                                 <p>身份证正面</p>
                             </div>
                             <div class="img-file-box">
-                                <div>
-                                    <input type="file">
+                                <div  class="picIdFront-in" style="background: url('') no-repeat;">
+                                   
                                 </div>
                                 <p>身份证反面</p>
                             </div>
-                            <div class="img-file-box">
+                            <!--<div class="img-file-box">
                                 <div>
-                                    <input type="file">
+                                    <input type="file" style="z-index:-1;">
                                 </div>
                                 <p>手持身份证</p>
-                            </div>
+                            </div>-->
                         </div>
                       
                     </li>
@@ -263,11 +268,17 @@
     <script src="js/tableSort.js"></script>
     <script src="js/nomoJS.js"></script>
     <script src="js/gimi.js"></script>
+    <script src="js/jquery.cookie.js"></script>
+    <script src="js/fetch.js"></script>
+    <script src="js/jz_admin.js"></script>
     <script>
            $(function () { 
                $(".radio-box input").click(function () {  
                     $("."+$(this).data("item")).show().siblings(".img-file-box-con").hide();
                });
+
+
+               Membership.Atte_msg();
             });
     </script>
 
