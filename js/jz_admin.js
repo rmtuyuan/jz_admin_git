@@ -2,7 +2,12 @@
 function showInfo(text) {
     $("body").addClass("overflow-hidden");
     $(".info-text").html(text);
-    $(".modal-info").show();
+    $(".modal-info").fadeIn(300);
+
+    setTimeout(function () {
+        $("body").removeClass("overflow-hidden");
+        $(".modal-info").fadeOut(300);
+    }, 1000);
 
 }
 $(".info-sure").click(function (e) {
@@ -46,7 +51,7 @@ function openHref(url) {
 
 
 var login_uid = null; //uid
-var server = "http://192.168.1.4:8081//"; //http:
+var server = "http://192.168.1.5:8081//"; //http:
 var Comment = {
     init: function () {
 
@@ -381,23 +386,35 @@ var Public_notice = {
 
 var Family_index = {
     init: function () {
-        //家族首页
-        //            var form = new FormData();
-        //     form.append("uid", uid); // 
+        //  家族首页
+        var form = new FormData();
 
-        //     fetch(server + "/user/my_info", {
-        //         method: 'POST',
-        // //      headers: { 'Accept': 'application/json',
-        // //      'Content-Type': 'application/json'},
-        //         mode: 'cors',
-        //         cache: 'default',
-        //         body: form
-        //     }).then((response) => response.json()).then(function (data) {
-        //         //console.log(data);
-        //         if (data.code == 200) {
-        //             console.log(data);
-        //         }
-        //     });
+        fetch(server + "check/getStatisticForFamily", {
+            method: 'POST',
+            //      headers: { 'Accept': 'application/json',
+            //      'Content-Type': 'application/json'},
+            mode: 'cors',
+            cache: 'default',
+            body: form
+        }).then((response) => response.json()).then(function (data) {
+            //console.log(data);
+            if (data.code == 200) {
+
+
+                $("#now_time").html(data.data.today);
+                var fram = document.createDocumentFragment();
+                for (var i = 0; i < data.data.data.length; i++) {
+                    var element = data.data.data[i];
+                    var li_html = document.createElement("li");
+                    $(li_html).html(`  <p>${element.title}</p>
+                             <div>${element.result}</div>`);
+                    fram.appendChild(li_html);
+                }
+                $("#return_yesterday_con").html(fram)
+
+
+            }
+        });
     }
 };
 
@@ -406,30 +423,42 @@ var Family_setting = {
     init: function () {
         this.DataLoad();
         this.CheckInput();
-        this.Img_upload();
+        this.uploadImg();
         this.ClickSubmit();
     },
+    logo: null, //图片路径
     DataLoad: function () {
         //显示头像昵称
-        //            var form = new FormData();
-        //     form.append("uid", uid); // 
+        var form = new FormData();
+        // form.append("uid", uid); // 
 
-        //     fetch(server + "/user/my_info", {
-        //         method: 'POST',
-        // //      headers: { 'Accept': 'application/json',
-        // //      'Content-Type': 'application/json'},
-        //         mode: 'cors',
-        //         cache: 'default',
-        //         body: form
-        //     }).then((response) => response.json()).then(function (data) {
-        //         //console.log(data);
-        //         if (data.code == 200) {
-        //             console.log(data);
-        //         }
-        //     });
+        fetch(server + "family/getFamilyInfo", {
+            method: 'POST',
+            //      headers: { 'Accept': 'application/json',
+            //      'Content-Type': 'application/json'},
+            mode: 'cors',
+            cache: 'default',
+            body: form
+        }).then((response) => response.json()).then(function (data) {
+            //console.log(data);
+            if (data.code == 200) {
+               
+                // console.log(data);
+                // $(".family-logo").val( data.data.familyInfo.logo);
+                 $(".img-logo-box-img").attr("src", data.data.familyInfo.logo);
+                    $(".img-logo-box").css("background", "url(" +  data.data.familyInfo.logo + ") no-repeat").css("background-size", "100% 100%");
+                $(".family-name").html(data.data.familyInfo.familyName);
+                $(".complant-name").html(data.data.familyInfo.company);
+                $(".boss-name").html(data.data.familyInfo.userName);
+                $(".family-declaration").html(data.data.familyInfo.declaration);
+                $(".family-notice").html(data.data.familyInfo.notic);
+                $(".family-agentUp").val(data.data.familyInfo.agentUp);
+                Family_setting.logo = data.data.familyInfo.logo;
+            }
+        });
     },
     CheckInput: function () {
-        $(".fs-text-input").keyup(function () {
+        $(".fs-input").keyup(function () {
 
             if ($(this).val().length > 0) {
                 $(this).addClass("actived");
@@ -443,7 +472,7 @@ var Family_setting = {
             }
         });
 
-        $(".fs-text-input").blur(function () {
+        $(".fs-input").blur(function () {
 
             if ($(this).val().length > 0) {
                 $(this).addClass("actived");
@@ -456,68 +485,289 @@ var Family_setting = {
             }
         });
     },
-    Img_upload: function () {
-        //上传图片
-        $(".fs-img-file").change(function (e) {
-            var imgPath = $(this).val();
-            var ipt = $(this);
-            if (imgPath == "") {
-                showInfo('请选择上传图片!');
-                //alert("请选择上传图片！");
+
+    uploadImg: function () {
+
+        //图片上传
+        var filechooser = $(".fs-img-file");
+        //    用于压缩图片的canvas
+        var canvas = document.createElement("canvas");
+        var ctx = canvas.getContext('2d');
+        //    瓦片canvas
+        var tCanvas = document.createElement("canvas");
+        var tctx = tCanvas.getContext("2d");
+        var maxsize = 100 * 1024;
+        $("#upload").on("click", function () {
+                filechooser.click();
+            })
+            .on("touchstart", function () {
+                $(this).addClass("touch")
+            })
+            .on("touchend", function () {
+                $(this).removeClass("touch")
+            });
+        var ipt = null;
+        filechooser.change(function () {
+            ipt = $(this);
+            if (!this.files.length) return;
+            var files = Array.prototype.slice.call(this.files);
+            if (files.length > 9) {
+                alert("最多同时只可上传9张图片");
                 return;
             }
-            //判断上传文件的后缀名
-            var strExtension = imgPath.substr(imgPath.lastIndexOf('.') + 1);
-            if (strExtension != 'jpg' && strExtension != 'gif' &&
-                strExtension != 'png' && strExtension != 'bmp' && strExtension != 'JPG' && strExtension != 'PNG') {
-                showInfo('请选择图片文件!');
-                // alert("请选择图片文件");
-                return;
+            files.forEach(function (file, i) {
+                if (!/\/(?:jpeg|png|jpg|gif)/i.test(file.type)) return;
+                var reader = new FileReader();
+                var li = document.createElement("li");
+                //          获取图片大小
+                var size = file.size / 1024 > 1024 ? (~~(10 * file.size / 1024 / 1024)) / 10 + "MB" : ~~(file.size / 1024) + "KB";
+                li.innerHTML = '<div class="progress"><span></span></div><div class="size">' + size + '</div>';
+                // $(".img-list").append($(li));
+                reader.onload = function () {
+                    var result = this.result;
+                    var img = new Image();
+                    img.src = result;
+                    $(li).css("background-image", "url(" + result + ")");
+                    //如果图片大小小于100kb，则直接上传
+                    if (result.length <= maxsize) {
+                        img = null;
+                        upload(result, file.type, $(li));
+                        return;
+                    }
+                    //      图片加载完毕之后进行压缩，然后上传
+                    if (img.complete) {
+                        callback();
+                    } else {
+                        img.onload = callback;
+                    }
+
+                    function callback() {
+                        var data = compress(img);
+                        upload(data, file.type, $(li));
+                        img = null;
+                    }
+                };
+                reader.readAsDataURL(file);
+            })
+        });
+        //    使用canvas对大图片进行压缩
+        var file_img = null;
+
+        function compress(img) {
+            var initSize = img.src.length;
+            var width = img.width;
+            var height = img.height;
+            //如果图片大于四百万像素，计算压缩比并将大小压至400万以下
+            var ratio;
+            if ((ratio = width * height / 4000000) > 1) {
+                ratio = Math.sqrt(ratio);
+                width /= ratio;
+                height /= ratio;
             } else {
-                for (var n = 0; n < this.files.length; n++) {
-                    var fileObj = this.files[n];
-                    var imgUrl = window.URL.createObjectURL(this.files[n]);
-                    var form_2 = new FormData();
-                    // ipt.parent().siblings(".img-box").find("div").css("background", "url(" + imgUrl + ") no-repeat").css("background-size", "100% 100%").find("img").attr("src", imgUrl)
-                    form_2.append("login_uid", atteRolu.login_uid);
-                    form_2.append("login_token", atteRolu.login_token);
-                    form_2.append("file", fileObj);
-                    fetch(server + "/file/upload", {
-                        method: 'POST',
-                        //headers: myHeaders,
-                        mode: 'cors',
-                        cache: 'default',
-                        body: form_2
-                    }).then((response) => response.json()).then(function (data) {
-                        //console.log(data);
-                        // atteRolu[ipt.attr("name")]=222;
-                        //  console.log(atteRolu.pic_id_front);
-                        if (data.code == 200) {
-                            //添加图片 
-                            ipt.parent().siblings(".img-box").find("div").css("background", "url(" + data.data.url + ") no-repeat").css("background-size", "100% 100%").find("img").attr("src", data.data.url);
-                            ipt.addClass("actived").removeClass("erroed");
-                            atteRolu[ipt.attr("name")] = data.data.url;
-
-
-                        } else {
-                            ipt.addClass("erroed").removeClass("actived");
-                            showInfo('当前网络不稳定,上传失败,请重新上传');
-                        }
-
-                    });
-
+                ratio = 1;
+            }
+            canvas.width = width;
+            canvas.height = height;
+            //        铺底色
+            ctx.fillStyle = "#fff";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            //如果图片像素大于100万则使用瓦片绘制
+            var count;
+            if ((count = width * height / 1000000) > 1) {
+                count = ~~(Math.sqrt(count) + 1); //计算要分成多少块瓦片
+                //            计算每块瓦片的宽和高
+                var nw = ~~(width / count);
+                var nh = ~~(height / count);
+                tCanvas.width = nw;
+                tCanvas.height = nh;
+                for (var i = 0; i < count; i++) {
+                    for (var j = 0; j < count; j++) {
+                        tctx.drawImage(img, i * nw * ratio, j * nh * ratio, nw * ratio, nh * ratio, 0, 0, nw, nh);
+                        ctx.drawImage(tCanvas, i * nw, j * nh, nw, nh);
+                    }
                 }
+            } else {
+                ctx.drawImage(img, 0, 0, width, height);
             }
+            //进行最小压缩
+            var ndata = canvas.toDataURL('image/jpeg', 0.1);
+            // console.log('压缩前：' + initSize);
+            // console.log('压缩后：' + ndata.length);
+            // console.log('压缩率：' + ~~(100 * (initSize - ndata.length) / initSize) + "%");
+            tCanvas.width = tCanvas.height = canvas.width = canvas.height = 0;
 
-        });
+            return ndata;
+        }
+        //    图片上传，将base64的图片转成二进制对象，塞进formdata上传
+        function upload(basestr, type, $li) {
+            var text = window.atob(basestr.split(",")[1]);
+            var buffer = new Uint8Array(text.length);
+            var pecent = 0,
+                loop = null;
+            for (var i = 0; i < text.length; i++) {
+                buffer[i] = text.charCodeAt(i);
+            }
+            var blob = getBlob([buffer], type);
+
+            var form_2 = new FormData();
+
+
+            form_2.append("file", blob, "file_" + Date.parse(new Date()) + ".jpg");
+            fetch(server + "/file/upload", {
+                method: 'POST',
+                //headers: myHeaders,
+                mode: 'cors',
+                cache: 'default',
+                body: form_2
+            }).then((response) => response.json()).then(function (data) {
+                //console.log(data);
+                // atteRolu[ipt.attr("name")]=222;
+                //  console.log(atteRolu.pic_id_front);
+                if (data.code == 200) {
+                    //添加图片 
+                    $(".img-logo-box-img").attr("src", data.data.url);
+                    $(".img-logo-box").css("background", "url(" + data.data.url + ") no-repeat").css("background-size", "100% 100%").find("img").attr("src", data.data.url);
+                    ipt.addClass("actived").removeClass("erroed");
+                    Family_setting.logo = data.data.url;
+
+
+                } else {
+                    ipt.addClass("erroed").removeClass("actived");
+                    showInfo('当前网络不稳定,上传失败,请重新上传');
+                }
+
+            });
+
+            //   formdata.append("login_uid", atteRolu.login_uid);
+            //         formdata.append("login_token", atteRolu.login_token);
+            //         formdata.append("file", blob);
+
+            // xhr.open('post', server + "/file/upload");
+            // xhr.onreadystatechange = function () {
+            //     if (xhr.readyState == 4 && xhr.status == 200) {
+            //         var jsonData = JSON.parse(xhr.responseText);
+            //         var imagedata = jsonData[0] || {};
+            //         var text = imagedata.path ? '上传成功' : '上传失败';
+            //         console.log(text + '：' + imagedata.path);
+            //         clearInterval(loop);
+            //         //当收到该消息时上传完毕
+
+            //         if (!imagedata.path) return;
+            //         $(".pic-list").append('<a href="' + imagedata.path + '">' + imagedata.name + '（' + imagedata.size + '）<img src="' + imagedata.path + '" /></a>');
+            //     }
+            // };
+            // //数据发送进度，前50%展示该进度
+            // xhr.upload.addEventListener('progress', function (e) {
+            //     if (loop) return;
+            //     pecent = ~~(100 * e.loaded / e.total) / 2;
+            //     $li.find(".progress span").css('width', pecent + "%");
+            //     if (pecent == 50) {
+            //         mockProgress();
+            //     }
+            // }, false);
+            // //数据后50%用模拟进度
+            // function mockProgress() {
+            //     if (loop) return;
+            //     loop = setInterval(function () {
+            //         pecent++;
+            //         $li.find(".progress span").css('width', pecent + "%");
+            //         if (pecent == 99) {
+            //             clearInterval(loop);
+            //         }
+            //     }, 100)
+            // }
+            // xhr.send(formdata);
+        }
+        /**
+         * 获取blob对象的兼容性写法
+         * @param buffer
+         * @param format
+         * @returns {*}
+         */
+        function getBlob(buffer, format) {
+            try {
+
+                return new Blob(buffer, {
+                    type: format
+                });
+            } catch (e) {
+                var bb = new(window.BlobBuilder || window.WebKitBlobBuilder || window.MSBlobBuilder);
+                buffer.forEach(function (buf) {
+                    bb.append(buf);
+                });
+
+                return bb.getBlob(format);
+            }
+        }
+        /**
+         * 获取formdata
+         */
+        function getFormData() {
+            var isNeedShim = ~navigator.userAgent.indexOf('Android') &&
+                ~navigator.vendor.indexOf('Google') &&
+                !~navigator.userAgent.indexOf('Chrome') &&
+                navigator.userAgent.match(/AppleWebKit\/(\d+)/).pop() <= 534;
+            return isNeedShim ? new FormDataShim() : new FormData()
+        }
+        /**
+         * formdata 补丁, 给不支持formdata上传blob的android机打补丁
+         * @constructor
+         */
+        function FormDataShim() {
+
+            var o = this,
+                parts = [],
+                boundary = Array(21).join('-') + (+new Date() * (1e16 * Math.random())).toString(36),
+                oldSend = XMLHttpRequest.prototype.send;
+            this.append = function (name, value, filename) {
+                parts.push('--' + boundary + '\r\nContent-Disposition: form-data; name="' + name + '"');
+                if (value instanceof Blob) {
+                    parts.push('; filename="' + (filename || 'blob') + '"\r\nContent-Type: ' + value.type + '\r\n\r\n');
+                    parts.push(value);
+                } else {
+                    parts.push('\r\n\r\n' + value);
+                }
+                parts.push('\r\n');
+            };
+            // Override XHR send()
+            XMLHttpRequest.prototype.send = function (val) {
+                var fr,
+                    data,
+                    oXHR = this;
+                if (val === o) {
+                    // Append the final boundary string
+                    parts.push('--' + boundary + '--\r\n');
+                    // Create the blob
+                    data = getBlob(parts);
+                    // Set up and read the blob into an array to be sent
+                    fr = new FileReader();
+                    fr.onload = function () {
+                        oldSend.call(oXHR, fr.result);
+                    };
+                    fr.onerror = function (err) {
+                        throw err;
+                    };
+                    fr.readAsArrayBuffer(data);
+                    // Set the multipart content type and boudary
+                    this.setRequestHeader('Content-Type', 'multipart/form-data; boundary=' + boundary);
+                    XMLHttpRequest.prototype.send = oldSend;
+                } else {
+                    oldSend.call(this, val);
+                }
+            };
+        }
+        //图片上传结束
+
+
     },
+
     ClickSubmit: function () {
         //点击提交按钮
         //点击提交  判断是否都填写完成 
-        $(".fs-atte-submit").click(function (e) {
+        $("#editFamilyInfo").click(function (e) {
             e.preventDefault();
             // 判断是否都填写完成 
-
+           
             if ($(".fs-input").length == $(".fs-input.actived").length) {
                 //都填了 fetch   跳转
                 var form_2 = new FormData();
@@ -526,9 +776,9 @@ var Family_setting = {
                     form_2.append(element.attr("name"), element.val()); // 
                 }
 
-                form_2.append("login_uid", atteRolu.login_uid); // 
-                form_2.append("login_token", atteRolu.login_token); //
-                fetch(server + "/user/authentication", {
+                // Family_setting.logo
+                  form_2.append("logo", Family_setting.logo); // 
+                fetch(server + "family/editFamilyInfo", {
                     method: 'POST',
                     //headers: myHeaders,
                     mode: 'cors',
@@ -537,8 +787,11 @@ var Family_setting = {
                 }).then((response) => response.json()).then(function (data) {
                     if (data.code == 200) {
                         // 成功 跳转网页
-                        alert("提交成功");
-                        window.location.href = 'attestation_after.html?login_uid=' + atteRolu.login_uid + "&login_token=" + atteRolu.login_token;
+                        showInfo("提交成功");
+                       setTimeout(function () {  
+                           window.location.reload();
+                       },300)
+                     
 
                     } else if (data.code == 400) {
                         showInfo(data.message);
@@ -572,23 +825,35 @@ var Family_msg_done = {
         this.DataLoad();
     },
     DataLoad: function () {
-        //显示数据
-        //            var form = new FormData();
-        //     form.append("uid", uid); // 
+        // 显示数据
+       var form = new FormData();
+        // form.append("uid", uid); // 
 
-        //     fetch(server + "/user/my_info", {
-        //         method: 'POST',
-        // //      headers: { 'Accept': 'application/json',
-        // //      'Content-Type': 'application/json'},
-        //         mode: 'cors',
-        //         cache: 'default',
-        //         body: form
-        //     }).then((response) => response.json()).then(function (data) {
-        //         //console.log(data);
-        //         if (data.code == 200) {
-        //             console.log(data);
-        //         }
-        //     });
+        fetch(server + "family/getFamilyInfo", {
+            method: 'POST',
+            //      headers: { 'Accept': 'application/json',
+            //      'Content-Type': 'application/json'},
+            mode: 'cors',
+            cache: 'default',
+            body: form
+        }).then((response) => response.json()).then(function (data) {
+            //console.log(data);
+            if (data.code == 200) {
+               
+                // console.log(data);
+                // $(".family-logo").val( data.data.familyInfo.logo);
+                $(".img-logo-box-img").attr("src", data.data.familyInfo.logo);
+                $(".img-logo-box").css("background", "url(" +  data.data.familyInfo.logo + ") no-repeat").css("background-size", "100% 100%");
+                $(".family-name").val(data.data.familyInfo.familyName);
+                 $(".family-id").val(data.data.familyInfo.id);
+                $(".complant-name").val(data.data.familyInfo.company);
+                $(".boss-name").val(data.data.familyInfo.userName);
+                $(".family-declaration").html(data.data.familyInfo.declaration);
+                $(".family-notice").html(data.data.familyInfo.notic);
+                $(".family-agentUp").val(data.data.familyInfo.agentUp);
+                Family_setting.logo = data.data.familyInfo.logo;
+            }
+        });
     }
 };
 
@@ -602,9 +867,9 @@ var Membership = {
     searchSome: function () {
         //上面搜索框
     },
-    li_length:null,
-    pagesFuc:function () {  
-           var form = new FormData();
+    li_length: null,
+    pagesFuc: function () {
+        var form = new FormData();
         //  page=1     familyid=1
         login_uid = 1;
         form.append("familyid", login_uid); // 
@@ -619,12 +884,12 @@ var Membership = {
         }).then((response) => response.json()).then(function (data) {
             //console.log(data);
             if (data.code == 200) {
-              
+
                 var li_leng = data.data.list.length;
-                  var li_leng = data.data.list.length;
+                var li_leng = data.data.list.length;
                 //分页
                 var setTotalCount = li_leng;
-                var all_pages=parseInt(li_leng%20==0?li_leng/20:li_leng/20+1);
+                var all_pages = parseInt(li_leng % 20 == 0 ? li_leng / 20 : li_leng / 20 + 1);
                 $('.content-footer').paging({
                     initPageNo: 1, // 初始页码
                     totalPages: all_pages, //总页数
@@ -632,8 +897,8 @@ var Membership = {
                     slideSpeed: 600, // 缓动速度。单位毫秒
                     jump: false, //是否支持跳转
                     callback: function (page) { // 回调函数
-                      //刷新页面
-                      //console.log(page)
+                        //刷新页面
+                        //console.log(page)
                         Membership.DataLoad(page);
                     }
                 });
@@ -641,7 +906,7 @@ var Membership = {
 
             }
         });
-        
+
     },
     DataLoad: function (page_number) {
         //数据加载 分页   

@@ -161,34 +161,34 @@
                 <ul class="atte-info-con">
                     <li>
                         <p>头像:</p>
-                        <div class="img-logo-box">
-                            <img src="img/h5share_img_banner_list.jpg" alt="">
+                        <div class="img-logo-box" style="">
+                            <img class="img-logo-box-img" style="display:none;" src="img/h5share_img_banner_list.jpg" alt="">
                         </div>
                     </li>
                   
                     <li>
                         <p>家族长ID:</p>
-                        <input type="text" name="" value="113213213" disabled>
+                        <input type="text" name="id" class="family-id" value="" disabled>
                     </li>
                     <li>
                         <p>家族名称:</p>
-                        <input type="text" name="" value="龙天下" disabled>
+                        <input type="text" class="family-name" name="" value="" disabled>
                     </li>
                     <li>
                         <p>法人姓名:</p>
-                        <input type="text" name="" value="张有军" disabled >
+                        <input type="text" name="" class="boss-name"  value="" disabled >
                     </li>
                    <li>
                         <p>公司全称:</p>
-                        <input type="text" name="" value="中金中富" disabled >
+                        <input type="text" name="" class="complant-name" value="" disabled >
                     </li>
                       <li>
                         <p></p>
                        <div class="img-file-box">
-                                <div style="    background: url(img/h5share_img_banner_list.jpg) no-repeat; background-size:100% 100%;">
-                                    <input type="file">
+                                <div class="companyPic" style=" background: url(img/h5share_img_banner_list.jpg) no-repeat; background-size:100% 100%;">
+                                    <!--<input type="file">-->
                                 </div>
-                                <p>上传营业执照</p>
+                                <p>营业执照</p>
                             </div>
                       
                     </li>
@@ -197,87 +197,48 @@
                         <p>证件类型:</p>
                         <div class="radio-box">
 
-                            <input type="radio" data-item='id_card'  checked id="id_card" name="id_style">
+                            <input type="radio" data-item='id_card' class="idCardType0"  disabled id="id_card" name="id_style">
                             <label for="id_card">身份证</label>
 
-                            <input type="radio" data-item='hz_card' id="hz_card" name="id_style">
+                            <input type="radio" data-item='hz_card' class="idCardType1" disabled id="hz_card" name="id_style">
                             <label for="hz_card">护照</label>
 
-                            <input type="radio" data-item='tw_card' id="tw_card" name="id_style">
+                            <input type="radio" data-item='tw_card' class="idCardType2" disabled id="tw_card" name="id_style">
                             <label for="tw_card">台湾身份证</label>
                         </div>
                     </li>
                     <li>
                         <p>证件号码:</p>
-                        <input type="text" name="" value="113213213" disabled>
+                        <input type="text" name="" class="idCard" value="" disabled>
                     </li>
                     <li>
                         <p></p>
                         <div class="img-file-box-con id_card">
                             <div class="img-file-box">
-                                <div>
-                                    <input type="file">
+                                <div class="picIdFront">
+                                    <!--<input type="file">-->
                                 </div>
-                                <p>身份证正面</p>
+                                <p class="idTypeText">证件正面</p>
                             </div>
                             <div class="img-file-box">
-                                <div>
-                                    <input type="file">
+                                <div class="picIdBack">
+                                    <!--<input type="file">-->
                                 </div>
-                                <p>身份证反面</p>
+                                <p >证件反面</p>
                             </div>
                             <div class="img-file-box">
-                                <div>
-                                    <input type="file">
-                                </div>
-                                <p>手持身份证</p>
-                            </div>
-                        </div>
-                         <div class="img-file-box-con hz_card" style="display:none">
-                            <div class="img-file-box">
-                                <div>
-                                    <input type="file">
-                                </div>
-                                <p>护照第一页</p>
-                            </div>
-                            <div class="img-file-box">
-                                <div>
-                                    <input type="file">
-                                </div>
-                                <p>护照第二页</p>
-                            </div>
-                            <div class="img-file-box">
-                                <div>
-                                    <input type="file">
-                                </div>
-                                <p>手持护照第一页</p>
-                            </div>
-                        </div>
-                         <div class="img-file-box-con tw_card" style="display:none">
-                            <div class="img-file-box">
-                                <div>
-                                    <input type="file">
-                                </div>
-                                <p>证件正面</p>
-                            </div>
-                            <div class="img-file-box">
-                                <div>
-                                    <input type="file">
-                                </div>
-                                <p>证件反面</p>
-                            </div>
-                            <div class="img-file-box">
-                                <div>
-                                    <input type="file">
+                                <div class="picIdUser">
+                                    <!--<input type="file">-->
                                 </div>
                                 <p>手持证件</p>
                             </div>
                         </div>
+                      
                     </li>
                       <li style="margin-top:20px;">
                         <p>手持证件照示例:</p>
                         <div class="img-logo-box">
-                            <img src="img/h5share_img_banner_list.jpg" alt="">
+                            <!--<img src="img/h5share_img_banner_list.jpg" alt="">-->
                         </div>
                     </li>
                     

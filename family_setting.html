@@ -167,15 +167,15 @@
                 <ul class="atte-info-con">
                     <li style="align-items: center;">
                         <p>家族名称:</p>
-                      <span>哈哈哈恍恍惚惚</span>
+                      <span class="family-name"></span>
                     </li>
                     <li>
                         <p>公司全称:</p>
-                        <span>哈哈哈恍恍惚惚</span>
+                        <span class="complant-name"></span>
                     </li>
                     <li>
                         <p>法人姓名:</p>
-                        <span>男</span>
+                        <span class="boss-name"></span>
                     </li>
                     <li>
                         <p>家族认证:</p>
@@ -183,30 +183,30 @@
                     </li>
                       <li style="align-items: flex-start;display:flex; margin:20px 0;">
                         <p>家族LOGO:</p>
-                        <div class="img-logo-box">
-                            <img src="img/h5share_img_banner_list.jpg" alt="">
+                        <div class="img-logo-box" style="">
+                            <img class="img-logo-box-img" style="display:none;" src="img/h5share_img_banner_list.jpg" alt="">
                         </div>
                         <div class="fam-set-img-box" >
-                            <input type="file"  class="fs-img-file fs-input erroed">
+                            <input type="file"  class="fs-img-file family-logo actived" name="logo">
                             <span> 上传图片</span>
                         </div>
                     </li>
                    <li>
                         <p>家族宣言:</p>
-                        <textarea class="fs-text-input fs-input erroed" style="width:500px;padding:5px; border:1px solid #ccc;">设计师的吉萨骄傲圣诞节按时来得及拉丝机德拉卡时间段拉斯科技的拉斯金达拉斯科技驾驶的楼</textarea>
+                        <textarea  class="fs-text-input family-declaration fs-input actived" name="declaration" style="width:500px;padding:5px; border:1px solid #ccc;"></textarea>
                     </li>
                   <li style=" margin:20px 0;">
                         <p>家族公告:</p>
-                        <textarea class="fs-text-input fs-input erroed" style="width:500px;padding:5px; border:1px solid #ccc;">设计师的吉萨骄傲圣诞节按时来得及拉丝机德拉卡时间段拉斯科技的拉斯金达拉斯科技驾驶的楼</textarea>
+                        <textarea class="fs-text-input family-notice fs-input actived" name="notic" style="width:500px;padding:5px; border:1px solid #ccc;"></textarea>
                     </li>
                    <li>
                         <p>经济人管理上限:</p>
-                        <input class="fs-text-input  fs-input erroed" type="number" min="0" value="500">
+                        <input class="fs-text-input family-agentUp fs-input actived" type="number" name="agentUp" min="0" value="0">
                     
                     </li>
                      <li>
                         <p></p>
-                        <a href="#" class="atte-submit fs-atte-submit">提交申请</a>
+                        <a href="#" class="atte-submit fs-atte-submit" id="editFamilyInfo">提交申请</a>
                     </li>
                   
                 </ul> 
@@ -225,9 +225,8 @@
                 <p class="info-text">
                    
                 </p>
-                 <p>
-                    <a href="#" class="info-sure info-sure-2">确定</a>
-                  
+               <p >
+                   
                 </p>
             </div>
             

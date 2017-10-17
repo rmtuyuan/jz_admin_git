@@ -501,7 +501,7 @@ input[type=checkbox].checkbix+label>span {
     top: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, .5);
+    background: rgba(0, 0, 0, 0);
     display: none;
     z-index: 1000;
 }
@@ -518,12 +518,13 @@ input[type=checkbox].checkbix+label>span {
 }
 
 .modal-content {
-    background: #fff;
-    width: 50vw;
+   background: rgba(6, 6, 6, .6);
+   color: #fff;
+    width: 70vw;
     position: absolute;
-    top: 27%;
+    top: 30%;
     left: 50%;
-    margin-left: -25vw;
+    margin-left: -35vw;
     border-radius: .04rem;
     z-index: 110;
 }
@@ -537,15 +538,16 @@ input[type=checkbox].checkbix+label>span {
 
 .modal-content>div>p {
     display: flex;
-    height: .55rem;
+    height: .6rem;
+    font-size: 18px;
     justify-content: center;
     align-items: center;
-    border-bottom: 1px solid #e7e7e7;
+    /*border-bottom: 1px solid #e7e7e7;*/
     cursor: pointer;
 }
 
 .modal-content>div>p:last-child {
-    border-bottom: 0;
+  display: none;
 }
 
 .modal-info p a {
@@ -557,18 +559,9 @@ input[type=checkbox].checkbix+label>span {
     align-items: center;
     color: #fe426f;
 }
-.modal-close-modal{
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom:0;
-    /*background: rgba(0, 0, 0, .5);*/
-       z-index: 10;
-}
+
 
 /*模态框*/
-
 
 /*添加经纪人*/
 
