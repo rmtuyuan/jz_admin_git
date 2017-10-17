@@ -1123,9 +1123,9 @@ var Membership = {
         }).then((response) => response.json()).then(function (data) {
             //console.log(data);
             if (data.code == 200) {
-                $(".img-box img").attr("src" ,data.data.url)
-            }else{
-                
+                $(".img-box img").attr("src", data.data.url)
+            } else {
+
             }
         });
     },
@@ -1168,18 +1168,18 @@ var Membership = {
             if (salary && salary > 0) {
                 var form = new FormData();
                 for (var j = 0; j < $("input").length; j++) {
-                    var element =  $("input")[j];
-                    if($(element).is(":checked")){
-                    
-                           form.append($(element).attr("name"), $(element).val()); // 
+                    var element = $("input")[j];
+                    if ($(element).is(":checked")) {
+
+                        form.append($(element).attr("name"), $(element).val()); // 
                     }
                 }
 
-             
-             
+
+
                 form.append("salary", salary); // 
-            
-                form.append("id",   Membership.sub_id);
+
+                form.append("id", Membership.sub_id);
                 fetch(server + "check/editAnchor", {
                     method: 'POST',
                     //      headers: { 'Accept': 'application/json',
@@ -1190,14 +1190,14 @@ var Membership = {
                 }).then((response) => response.json()).then(function (data) {
                     //console.log(data);
                     if (data.code == 200) {
-                          showInfo("操作成功");
-                    setTimeout(function () {
-                        window.location.reload();
-                    }, 300);
+                        showInfo("操作成功");
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 300);
 
-                       
-                    }else{
-                             showInfo(data.data.massage);
+
+                    } else {
+                        showInfo(data.data.massage);
                     }
                 });
 
@@ -1320,8 +1320,8 @@ var People_add = {
                                 <td class="membership-edit">
                                     
                                     ${element.status==1?`
-                                     <a href="edit_people.html?item=nav-line-11&id=${element.id}"  style="font-size:14px;">编辑</a>
-                                    <a  href="sign_contact.html?item=nav-line-11&id=${element.id}"  style="font-size:14px;">签署合同</a>
+                                    <a href="edit_people.html?item=nav-line-11&id=${element.id}"  style="font-size:14px;">编辑</a>
+                                   <!--  <a  href="sign_contact.html?item=nav-line-11&id=${element.id}"  style="font-size:14px;">签署合同</a>-->
                                     `:`     
                                      <a href="#" data-showmodal='agree-people-modal' data-id=${element.id} class="user-edit padd-agree-yes-not" data-modalclass="padd-agree-btn" style="font-size:14px;">同意</a>
                                       <a  class="user-edit padd-agree-yes-not" data-showmodal='not-agree-people-modal'  data-id=${element.id} data-modalclass="padd-agree-not-btn" style="font-size:14px;">驳回</a>`}
@@ -1440,12 +1440,140 @@ var People_month_data = {
     init: function () {
 
     },
+    li_length: null,
+    n:0,
+    pagesFuc: function (page_number, form) {
+
+        fetch(server + "check/getStatisticMonthList", {
+            method: 'POST',
+            //      headers: { 'Accept': 'application/json',
+            //      'Content-Type': 'application/json'},
+            mode: 'cors',
+            cache: 'default',
+            body: form
+        }).then((response) => response.json()).then(function (data) {
+            //console.log(data);
+            if (data.code == 200) {
+
+                var li_leng = data.data.size;
+
+                //分页
+                var setTotalCount = li_leng;
+                var all_pages = parseInt(li_leng % 20 == 0 ? li_leng / 20 : li_leng / 20 + 1);
+                People_month_data.n++;
+                if(  People_month_data.n==1){
+                        $(".monthtime").val(data.data.currentTime);
+                }
+             
+                $('.content-footer').paging({
+                    initPageNo: 1, // 初始页码
+                    totalPages: all_pages, //总页数
+                    totalCount: '合计' + setTotalCount + '条数据', // 条目总数
+                    slideSpeed: 600, // 缓动速度。单位毫秒
+                    jump: false, //是否支持跳转
+                    callback: function (page) { // 回调函数
+                        //刷新页面
+                        //console.log(page)
+                        People_month_data.DataLoad(page_number, form);
+                    }
+                });
+
+
+            }
+        });
+
+    },
+    DataInit: function (page_number) {
+        var form = new FormData();
+        //  page=1     familyid=1
+
+        form.append("role", ''); // 
+        form.append("monthtime", ""); // 
+        form.append("number", ""); // 
+        form.append("page", page_number); // 
+        this.pagesFuc(page_number, form);
+    },
+
+    DataLoad: function (page_number, form) {
+
+        fetch(server + "check/getStatisticMonthList", {
+            method: 'POST',
+            //      headers: { 'Accept': 'application/json',
+            //      'Content-Type': 'application/json'},
+            mode: 'cors',
+            cache: 'default',
+            body: form
+        }).then((response) => response.json()).then(function (data) {
+            //console.log(data);
+            if (data.code == 200) {
+                var tr_fram = document.createDocumentFragment();
+                var li_leng = data.data.list.length;
+               
+
+                for (var i = 0; i < li_leng; i++) {
+                    var element = data.data.list[i];
+                    var tr = document.createElement("tr");
+
+                    var dateParms = element.createTime + "";
+
+                    if (dateParms instanceof Date) {
+                        var datatime = dateParms;
+                    }
+
+                    //判断是否为字符串
+
+                    if ((typeof dateParms == "string") && dateParms.constructor == String) {
+
+                        //将字符串日期转换为日期格式
+
+                        var datatime = new Date(parseInt(dateParms));
+
+                    }
+                   
+                    $(tr).html(
+                        `
+                    
+                                <td>${element.number}</td>
+                                <td>${element.nickName}</td>
+                                  <td>${element.level==0?"普通":element.level==1?"精英":"优秀"}</td>
+                                    <td>${element.totalTicket}</td>
+                                        <td>${element.totalCount}</td>
+                                         <td>${element.getrate * 100} %</td>
+                                           <td>${element.role==0?"主播":element.role==1?"经纪人":"--"}</td>
+                            
+                                      
+                                </td>`
+                    );
+                    tr_fram.appendChild(tr);
+                }
+
+                $("#tbody").html(tr_fram);
+
+            }
+        });
+
+
+    },
     searchSome: function () {
         //上面搜索框
+        $("#padd_search_btn").click(function (e) {
+            e.preventDefault();
+            var role = $(".role").val();
+
+            var number = $(".number").val();
+            var monthtime = $(".monthtime").val();
+            var form = new FormData();
+
+
+            form.append("role", role); // 
+            form.append("monthtime", monthtime); // 
+
+            form.append("number", number); // 
+            form.append("page", 1); // 
+            People_month_data.pagesFuc(1, form);
+        });
+
     },
-    DataLoad: function () {
-        //数据加载 
-    }
 }
 
 //成员天数据
@@ -1453,12 +1581,140 @@ var People_day_data = {
     init: function () {
 
     },
+     li_length: null,
+     n:0,
+    pagesFuc: function (page_number, form) {
+
+        fetch(server + "check/getStatisticDayList", {
+            method: 'POST',
+            //      headers: { 'Accept': 'application/json',
+            //      'Content-Type': 'application/json'},
+            mode: 'cors',
+            cache: 'default',
+            body: form
+        }).then((response) => response.json()).then(function (data) {
+            //console.log(data);
+            if (data.code == 200) {
+
+                var li_leng = data.data.size;
+
+                //分页
+                var setTotalCount = li_leng;
+                People_day_data.n++;
+                if(People_day_data.n==1){
+                     $(".daytime").val(data.data.currentTime);
+                }
+                 
+                var all_pages = parseInt(li_leng % 20 == 0 ? li_leng / 20 : li_leng / 20 + 1);
+                $('.content-footer').paging({
+                    initPageNo: 1, // 初始页码
+                    totalPages: all_pages, //总页数
+                    totalCount: '合计' + setTotalCount + '条数据', // 条目总数
+                    slideSpeed: 600, // 缓动速度。单位毫秒
+                    jump: false, //是否支持跳转
+                    callback: function (page) { // 回调函数
+                        //刷新页面
+                        //console.log(page)
+                        People_day_data.DataLoad(page_number, form);
+                    }
+                });
+
+
+            }
+        });
+
+    },
+    DataInit: function (page_number) {
+        var form = new FormData();
+        //  page=1     familyid=1
+
+        form.append("role", ''); // 
+        form.append("daytime", ""); // 
+        form.append("number", ""); // 
+        form.append("page", page_number); // 
+        this.pagesFuc(page_number, form);
+    },
+
+    DataLoad: function (page_number, form) {
+
+        fetch(server + "check/getStatisticDayList", {
+            method: 'POST',
+            //      headers: { 'Accept': 'application/json',
+            //      'Content-Type': 'application/json'},
+            mode: 'cors',
+            cache: 'default',
+            body: form
+        }).then((response) => response.json()).then(function (data) {
+            //console.log(data);
+            if (data.code == 200) {
+                var tr_fram = document.createDocumentFragment();
+                var li_leng = data.data.list.length;
+            
+
+                for (var i = 0; i < li_leng; i++) {
+                    var element = data.data.list[i];
+                    var tr = document.createElement("tr");
+
+                    var dateParms = element.createTime + "";
+
+                    if (dateParms instanceof Date) {
+                        var datatime = dateParms;
+                    }
+
+                    //判断是否为字符串
+
+                    if ((typeof dateParms == "string") && dateParms.constructor == String) {
+
+                        //将字符串日期转换为日期格式
+
+                        var datatime = new Date(parseInt(dateParms));
+
+                    }
+                   
+                    $(tr).html(
+                        `
+                    
+                                <td>${element.number}</td>
+                                <td>${element.nickName}</td>
+                                  <td>${element.level==0?"普通":element.level==1?"精英":"优秀"}</td>
+                                    <td>${element.totalTicket}</td>
+                                        <td>${element.totalCount}</td>
+                                         <td>${element.getrate * 100} %</td>
+                                           <td>${element.role==0?"主播":element.role==1?"经纪人":"--"}</td>
+                            
+                                      
+                                </td>`
+                    );
+                    tr_fram.appendChild(tr);
+                }
+
+                $("#tbody").html(tr_fram);
+
+            }
+        });
+
+
+    },
     searchSome: function () {
         //上面搜索框
+        $("#padd_search_btn").click(function (e) {
+            e.preventDefault();
+            var role = $(".role").val();
+
+            var number = $(".number").val();
+            var daytime = $(".daytime").val();
+            var form = new FormData();
+
+
+            form.append("role", role); // 
+            form.append("daytime", daytime); // 
+
+            form.append("number", number); // 
+            form.append("page", 1); // 
+            People_day_data.pagesFuc(1, form);
+        });
+
     },
-    DataLoad: function () {
-        //数据加载 
-    }
 }
 
 //家族收入来源

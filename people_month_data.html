@@ -168,14 +168,16 @@
                                 </select> -->
                                  <div class="form-group has-feedback inline-blok search-box" style="position:relative;">
                                     <label class="sr-only" for="search">搜索</label>
-                                    <input class="form-control search-input" placeholder="全名ID" type="text" id="header-search" />
-                                      <select name="" id="" class="select-search">
-                                        <option value="">所有</option>
-                                        <option value="">所有222</option>
-                                    </select>
-                                   <input class="form-control search-input" placeholder=""   type="month" id="header-search" />
+                                   <input class="form-control search-input number" placeholder="全民ID" type="text" id="header-search" />
                                   
-                                   <a href="#">查询</a><span>时间只能选择一个自然月</span>
+                                      <select name="" id="" class="select-search role">
+                                        <option value="">所有</option>
+                                        <option value="0">主播</option>
+                                         <option value="1">经纪人</option>
+                                    </select>
+                                   <input class="form-control search-input monthtime" placeholder="" value=""  name="monthtime" type="month" id="header-search" />
+                                  
+                              <a href="#" id="padd_search_btn">查询</a><span>时间只能选择一个自然月</span>
                                 </div>
                             </form>
                         </div>
@@ -184,19 +186,19 @@
                     <table class="table gimi-table table-striped" id="tableSort">
                         <thead>
                             <tr>
-                                <th>主播UID</th>
+                                <th>主播ID</th>
                                 <!--<th class="table-sort sort-both sort-down" type="number">序号</th>-->
                                 <th>主播名称</th>
                                 <th>主播评级</th>
                                 <th>主播流水</th>
-                               
+<!--                               
                                 <th>达标开播时长(小时)</th>
                                 <th>达标直播天数(小时)</th>
-                                <th>最后开播时间</th>
+                                <th>最后开播时间</th>-->
                                  <th>分享次数</th>
                                 <th>分成比例(家族 : 主播)</th>
-                                 <th>是否核减</th>
-                                <th>核减期限(起始月)</th>
+                                 <!--<th>是否核减</th>
+                                <th>核减期限(起始月)</th>-->
                                 <th>角色</th>
                                 <!--<th class="table-sort sort-both" type="number">积分</th>
                                 <th class="table-sort sort-both" type="number">热度</th>
@@ -210,8 +212,8 @@
                                
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
+                        <tbody  id="tbody">
+                            <!--<tr>
                                
                                 <td>0001</td>
                                
@@ -237,21 +239,11 @@
                               
                              
                             </tr>
-                         
+                         -->
                         </tbody>
                     </table>
-                      <div class="content-footer">
-                        <div class="page-text">
-                            当前显示 <span id="page-star">1</span> 到 <span id="page-end">9</span> 条，共 <span id="page-all">12</span>                            条记录。
-                        </div>
-                        <div class="page-btn">
-                            <a href="" class="btn btn-yellow">上一页</a>
-                            <a href="" class="btn btn-yellow active">1</a>
-                            <a href="" class="btn btn-yellow">2</a>
-                            <a href="" class="btn btn-yellow">3</a>
-                            <a href="" class="btn btn-yellow">4</a>
-                            <a href="" class="btn btn-yellow">下一页</a>
-                        </div>
+                      <div class="content-footer box">
+                       
                     </div>
                 </div>
             </div>
@@ -290,6 +282,10 @@
     <script src="js/tableSort.js"></script>
     <script src="js/nomoJS.js"></script>
     <script src="js/gimi.js"></script>
+      <script src="js/jquery.cookie.js"></script>
+    <script src="js/fetch.js"></script>
+    <script src="js/paging.js"></script>
+    <script src="js/jz_admin.js"></script>
     <script>
         $(function () {
             $(".radio-box input").click(function () {
@@ -307,6 +303,11 @@
                 e.preventDefault();
                 $('.modal-log-box').hide();
             });
+          
+
+              People_month_data.DataInit(1);
+            
+              People_month_data.searchSome();
         });
     </script>
 
