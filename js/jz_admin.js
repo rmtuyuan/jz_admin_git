@@ -442,11 +442,11 @@ var Family_setting = {
         }).then((response) => response.json()).then(function (data) {
             //console.log(data);
             if (data.code == 200) {
-               
+
                 // console.log(data);
                 // $(".family-logo").val( data.data.familyInfo.logo);
-                 $(".img-logo-box-img").attr("src", data.data.familyInfo.logo);
-                    $(".img-logo-box").css("background", "url(" +  data.data.familyInfo.logo + ") no-repeat").css("background-size", "100% 100%");
+                $(".img-logo-box-img").attr("src", data.data.familyInfo.logo);
+                $(".img-logo-box").css("background", "url(" + data.data.familyInfo.logo + ") no-repeat").css("background-size", "100% 100%");
                 $(".family-name").html(data.data.familyInfo.familyName);
                 $(".complant-name").html(data.data.familyInfo.company);
                 $(".boss-name").html(data.data.familyInfo.userName);
@@ -767,7 +767,7 @@ var Family_setting = {
         $("#editFamilyInfo").click(function (e) {
             e.preventDefault();
             // 判断是否都填写完成 
-           
+
             if ($(".fs-input").length == $(".fs-input.actived").length) {
                 //都填了 fetch   跳转
                 var form_2 = new FormData();
@@ -777,7 +777,7 @@ var Family_setting = {
                 }
 
                 // Family_setting.logo
-                  form_2.append("logo", Family_setting.logo); // 
+                form_2.append("logo", Family_setting.logo); // 
                 fetch(server + "family/editFamilyInfo", {
                     method: 'POST',
                     //headers: myHeaders,
@@ -788,10 +788,10 @@ var Family_setting = {
                     if (data.code == 200) {
                         // 成功 跳转网页
                         showInfo("提交成功");
-                       setTimeout(function () {  
-                           window.location.reload();
-                       },300)
-                     
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 300)
+
 
                     } else if (data.code == 400) {
                         showInfo(data.message);
@@ -826,7 +826,7 @@ var Family_msg_done = {
     },
     DataLoad: function () {
         // 显示数据
-       var form = new FormData();
+        var form = new FormData();
         // form.append("uid", uid); // 
 
         fetch(server + "family/getFamilyInfo", {
@@ -839,15 +839,21 @@ var Family_msg_done = {
         }).then((response) => response.json()).then(function (data) {
             //console.log(data);
             if (data.code == 200) {
-               
+
                 // console.log(data);
                 // $(".family-logo").val( data.data.familyInfo.logo);
                 $(".img-logo-box-img").attr("src", data.data.familyInfo.logo);
-                $(".img-logo-box").css("background", "url(" +  data.data.familyInfo.logo + ") no-repeat").css("background-size", "100% 100%");
+                $(".img-logo-box").css("background", "url(" + data.data.familyInfo.logo + ") no-repeat").css("background-size", "100% 100%");
                 $(".family-name").val(data.data.familyInfo.familyName);
-                 $(".family-id").val(data.data.familyInfo.id);
+                $(".family-id").val(data.data.familyInfo.id);
                 $(".complant-name").val(data.data.familyInfo.company);
                 $(".boss-name").val(data.data.familyInfo.userName);
+                $(".companyPic").css("background", "url(" + data.data.familyInfo.logo + ") no-repeat").css("background-size", "100% 100%");
+                $(".picIdFront").css("background", "url(" + data.data.familyInfo.picIdFront + ") no-repeat").css("background-size", "100% 100%");
+                $(".picIdBack").css("background", "url(" + data.data.familyInfo.picIdBack + ") no-repeat").css("background-size", "100% 100%");
+                $(".picIdUser").css("background", "url(" + data.data.familyInfo.picIdUser + ") no-repeat").css("background-size", "100% 100%");
+                $(".idCardType" + data.data.familyInfo.idCardType).attr("checked", "");
+                $(".idCard").val(data.data.familyInfo.idCard);
                 $(".family-declaration").html(data.data.familyInfo.declaration);
                 $(".family-notice").html(data.data.familyInfo.notic);
                 $(".family-agentUp").val(data.data.familyInfo.agentUp);
@@ -864,16 +870,9 @@ var Membership = {
     init: function () {
 
     },
-    searchSome: function () {
-        //上面搜索框
-    },
     li_length: null,
-    pagesFuc: function () {
-        var form = new FormData();
-        //  page=1     familyid=1
-        login_uid = 1;
-        form.append("familyid", login_uid); // 
-        form.append("page", 1); // 
+    pagesFuc: function (page_number, form) {
+
         fetch(server + "check/getCheckAnchorList", {
             method: 'POST',
             //      headers: { 'Accept': 'application/json',
@@ -885,8 +884,8 @@ var Membership = {
             //console.log(data);
             if (data.code == 200) {
 
-                var li_leng = data.data.list.length;
-                var li_leng = data.data.list.length;
+                var li_leng = data.data.totalCount;
+
                 //分页
                 var setTotalCount = li_leng;
                 var all_pages = parseInt(li_leng % 20 == 0 ? li_leng / 20 : li_leng / 20 + 1);
@@ -899,7 +898,7 @@ var Membership = {
                     callback: function (page) { // 回调函数
                         //刷新页面
                         //console.log(page)
-                        Membership.DataLoad(page);
+                        Membership.DataLoad(page_number, form);
                     }
                 });
 
@@ -908,15 +907,18 @@ var Membership = {
         });
 
     },
-    DataLoad: function (page_number) {
-        //数据加载 分页   
-
-
+    DataInit: function (page_number) {
         var form = new FormData();
         //  page=1     familyid=1
-        login_uid = 1;
-        form.append("familyid", login_uid); // 
+
+        form.append("role", ''); // 
+        form.append("status", 1); // 
         form.append("page", page_number); // 
+        this.pagesFuc(page_number, form);
+    },
+
+    DataLoad: function (page_number, form) {
+
         fetch(server + "check/getCheckAnchorList", {
             method: 'POST',
             //      headers: { 'Accept': 'application/json',
@@ -931,52 +933,95 @@ var Membership = {
                 var li_leng = data.data.list.length;
 
 
-
                 for (var i = 0; i < li_leng; i++) {
                     var element = data.data.list[i];
                     var tr = document.createElement("tr");
+
+                    var dateParms = element.createTime + "";
+
+                    if (dateParms instanceof Date) {
+                        var datatime = dateParms;
+                    }
+
+                    //判断是否为字符串
+
+                    if ((typeof dateParms == "string") && dateParms.constructor == String) {
+
+                        //将字符串日期转换为日期格式
+
+                        var datatime = new Date(parseInt(dateParms));
+
+                    }
+
                     $(tr).html(
-                        `
-                                <td>0001</td>
+                        `        
+                                <td>${element. id}</td>
                               
-                                <td>222222</td>
-                                <td>男的范德萨</td>
-                                <td>1990-02-01</td>
+                                <td>${element.number}</td>
+                                <td>${element.nickName}</td>
                                
-                                <td class="color-blue"><a href="anchor_msg.html?item=nav-line-11">查看</a></td>
-                                <td>1991-02-01</td>
-                                <td class="text-blue">23</td>
+                                <td>${element.level==0?"普通":element.level==1?"精英":"优秀"}</td>
                                 
+                                  <td>${element.roomStatus==0?"关闭":element.roomStatus==1?"直播中":"暂停"}</td>
+                                
+                                    <td>${element.role==0?"主播":element.role==1?"经纪人":"--"}</td>
+                                    <td>${element.agentname!=null||element.agentname!=''?element.agentname:"--"}</td>
+                                <td class="color-blue"><a href="anchor_msg.html?item=nav-line-11&id=${element.uid}">查看</a></td>
+                                 <td>${element.coWay==0?"签约":element.coWay==1?"其他":"--"}</td>
                               
+                                <td class="text-blue">${element.signStatus == 0?"--":element.hetongStartTime+" 至 "+element.hetongEndTime}</td>
+                                
+                               
+
+                               <td class="text-blue">${element.signStatus == 0?"--": element.signTime}</td>
+                               <td class="text-blue">${element.signStatus == 0?"--": element.probation}</td>
+                                 <td class="text-blue">${element.signStatus == 0?"未签":"已签"}</td>
                                 <td class="membership-edit">
                                     
+                                   
+                                     <a href="edit_people.html?item=nav-line-11&id=${element.number}"  style="font-size:14px;">编辑</a>
+                                    <a href="check_contract.html?item=nav-line-10&id=${element.uid}" class="">查看合同</a>
+                            
+                                      <a  class="user-edit padd-agree-yes-not" data-showmodal='not-agree-people-modal'  data-id=${element.uid} data-modalclass="padd-agree-not-btn" style="font-size:14px;">删除</a>
+                                      
+        
                                     
-                                      <a href="#" data-showmodal='agree-people-modal' class="user-edit" style="font-size:14px;">同意</a>
-                                    <a  class="user-edit" data-showmodal='not-agree-people-modal' style="font-size:14px;">驳回</a>
-                                          
-                                </td>`
-                    );
+                                </td> `
 
+                    );
+                    tr_fram.appendChild(tr);
                 }
+
+                $("#tbody").html(tr_fram);
 
             }
         });
 
 
     },
-    ClickSearch: function () {
-        //查询 相关
-    },
-    editSome: function () {
-        //操作的各个按钮
+    searchSome: function () {
+        //上面搜索框
+        $("#padd_search_btn").click(function (e) {
+            e.preventDefault();
+            var role = $(".role").val();
+            var status = 1;
+            var number = $(".number").val();
+            var nickname = $(".nickname").val();
+            var dayDiff = $(".dayDiff").val();
+            var form = new FormData();
+            form.append("role", role); // 
+            form.append("status", status); // 
+            form.append("nickname", nickname); // 
+            form.append("number", number); // 
+            form.append("page", 1); // 
+            form.append("dayDiff", dayDiff); // 
+            Membership.pagesFuc(1, form);
+        });
 
-        //编辑 
     },
-    Atte_msg: function () {
-        //认证信息 显示数据
-
+    Atte_msg: function (uid) {
         var form = new FormData();
-        form.append("uid", 10029); // 
+        form.append("uid", uid); // 
 
         fetch(server + "check/getAuthentication", {
             method: 'POST',
@@ -1002,6 +1047,46 @@ var Membership = {
                 $(".picIdBack-in").css("background", " url(" + data.data.userAuthentication.picIdBack + ") no-repeat");
             }
         });
+
+    },
+    Edit_agree: function () {
+        // 同意或者驳回
+        $("#tableSort").on("click", ".padd-agree-yes-not", function (e) {
+            e.preventDefault();
+
+            $("." + $(this).data("showmodal")).find(".padd-agree-btn").attr("data-id", $(this).data("id"));
+
+
+        })
+        $(".padd-agree-btn").click(function (e) {
+            e.preventDefault();
+            var id = $(this).data("id");
+            var status = $(this).data("status");
+            var form = new FormData();
+            form.append("uid", id); // 
+
+            fetch(server + "check/removeAnchor", {
+                method: 'POST',
+
+                mode: 'cors',
+                cache: 'default',
+                body: form
+            }).then((response) => response.json()).then(function (data) {
+                //console.log(data);
+                if (data.code == 200) {
+                    $('.modal-log-box').hide();
+                    showInfo("操作成功");
+                    setTimeout(function () {
+                        window.location.reload();
+                    }, 300);
+
+
+                } else {
+                    showInfo(data.message)
+                }
+            });
+        });
+
     },
     AddJjr: function () {
         // 添加经纪人
@@ -1024,29 +1109,103 @@ var Membership = {
 
     },
     Check_contract: function () {
-        //查看合同
-        //   var form = new FormData();
-        //     form.append("uid", uid); // 
+        var uid = $.getUrlParam("id");
+        var form = new FormData();
+        form.append("uid", uid); // 
 
-        //     fetch(server + "/user/my_info", {
-        //         method: 'POST',
-        // //      headers: { 'Accept': 'application/json',
-        // //      'Content-Type': 'application/json'},
-        //         mode: 'cors',
-        //         cache: 'default',
-        //         body: form
-        //     }).then((response) => response.json()).then(function (data) {
-        //         //console.log(data);
-        //         if (data.code == 200) {
-        //             console.log(data);
-        //         }
-        //     });
+        fetch(server + "check/lookHeTong", {
+            method: 'POST',
+            //      headers: { 'Accept': 'application/json',
+            //      'Content-Type': 'application/json'},
+            mode: 'cors',
+            cache: 'default',
+            body: form
+        }).then((response) => response.json()).then(function (data) {
+            //console.log(data);
+            if (data.code == 200) {
+                $(".img-box img").attr("src" ,data.data.url)
+            }else{
+                
+            }
+        });
     },
     Del_people: function () {
         //移除成员
     },
+    sub_id: null,
     Edit_people: function () {
         //编辑成员
+        var uid = $.getUrlParam("id");
+        var form = new FormData();
+        form.append("number", uid); // 
+        form.append("status", 1); // 
+        form.append("page", 1);
+        fetch(server + "check/getCheckAnchorList", {
+            method: 'POST',
+            //      headers: { 'Accept': 'application/json',
+            //      'Content-Type': 'application/json'},
+            mode: 'cors',
+            cache: 'default',
+            body: form
+        }).then((response) => response.json()).then(function (data) {
+            //console.log(data);
+            if (data.code == 200) {
+                var element = data.data.list[0];
+                $(".number").html(element.number);
+                $(".nickname").html(element.nickName);
+                $(".role" + element.role).attr("checked", "");
+                $(".level" + element.level).attr("checked", "")
+                $(".getrate").html(element.getrate * 100);
+                $(".salary").val(element.salary);
+                Membership.sub_id = element.id;
+            }
+        });
+
+
+        $(".ep-atte-submit").click(function (e) {
+            e.preventDefault();
+            var salary = $(".salary").val();
+            if (salary && salary > 0) {
+                var form = new FormData();
+                for (var j = 0; j < $("input").length; j++) {
+                    var element =  $("input")[j];
+                    if($(element).is(":checked")){
+                    
+                           form.append($(element).attr("name"), $(element).val()); // 
+                    }
+                }
+
+             
+             
+                form.append("salary", salary); // 
+            
+                form.append("id",   Membership.sub_id);
+                fetch(server + "check/editAnchor", {
+                    method: 'POST',
+                    //      headers: { 'Accept': 'application/json',
+                    //      'Content-Type': 'application/json'},
+                    mode: 'cors',
+                    cache: 'default',
+                    body: form
+                }).then((response) => response.json()).then(function (data) {
+                    //console.log(data);
+                    if (data.code == 200) {
+                          showInfo("操作成功");
+                    setTimeout(function () {
+                        window.location.reload();
+                    }, 300);
+
+                       
+                    }else{
+                             showInfo(data.data.massage);
+                    }
+                });
+
+            } else {
+                showInfo("底薪填写不正确")
+            }
+
+        })
     },
     Batch_anchor: function () {
         //导入主播 
@@ -1059,30 +1218,174 @@ var Membership = {
 //成员增减审批
 var People_add = {
     init: function () {
+        this.DataLoad();
+
+    },
+    li_length: null,
+    pagesFuc: function (page_number, form) {
+
+        fetch(server + "check/getCheckAnchorList", {
+            method: 'POST',
+            //      headers: { 'Accept': 'application/json',
+            //      'Content-Type': 'application/json'},
+            mode: 'cors',
+            cache: 'default',
+            body: form
+        }).then((response) => response.json()).then(function (data) {
+            //console.log(data);
+            if (data.code == 200) {
+
+                var li_leng = data.data.totalCount;
+
+                //分页
+                var setTotalCount = li_leng;
+                var all_pages = parseInt(li_leng % 20 == 0 ? li_leng / 20 : li_leng / 20 + 1);
+                $('.content-footer').paging({
+                    initPageNo: 1, // 初始页码
+                    totalPages: all_pages, //总页数
+                    totalCount: '合计' + setTotalCount + '条数据', // 条目总数
+                    slideSpeed: 600, // 缓动速度。单位毫秒
+                    jump: false, //是否支持跳转
+                    callback: function (page) { // 回调函数
+                        //刷新页面
+                        //console.log(page)
+                        People_add.DataLoad(page_number, form);
+                    }
+                });
+
+
+            }
+        });
+
+    },
+    DataInit: function (page_number) {
+        var form = new FormData();
+        //  page=1     familyid=1
+
+        form.append("role", ''); // 
+        form.append("status", 0); // 
+        form.append("page", page_number); // 
+        this.pagesFuc(page_number, form);
+    },
+
+    DataLoad: function (page_number, form) {
+
+        fetch(server + "check/getCheckAnchorList", {
+            method: 'POST',
+            //      headers: { 'Accept': 'application/json',
+            //      'Content-Type': 'application/json'},
+            mode: 'cors',
+            cache: 'default',
+            body: form
+        }).then((response) => response.json()).then(function (data) {
+            //console.log(data);
+            if (data.code == 200) {
+                var tr_fram = document.createDocumentFragment();
+                var li_leng = data.data.list.length;
+
+
+                for (var i = 0; i < li_leng; i++) {
+                    var element = data.data.list[i];
+                    var tr = document.createElement("tr");
+
+                    var dateParms = element.createTime + "";
+
+                    if (dateParms instanceof Date) {
+                        var datatime = dateParms;
+                    }
+
+                    //判断是否为字符串
+
+                    if ((typeof dateParms == "string") && dateParms.constructor == String) {
+
+                        //将字符串日期转换为日期格式
+
+                        var datatime = new Date(parseInt(dateParms));
+
+                    }
+
+                    $(tr).html(
+                        `
+                                <td>${element. id}</td>
+                              
+                                <td>${element.number}</td>
+                                <td>${element.nickName}</td>
+                                <td>${element.status==0?"审核中":element.status==1?"已通过":"未通过"}</td>
+                               
+                                <td class="color-blue"><a href="anchor_msg.html?item=nav-line-11&id=${element.uid}">查看</a></td>
+                                <td>${datatime.getFullYear()}-${datatime.getMonth()+1>=10? datatime.getMonth()+1:"0"+ (datatime.getMonth()+1)}-${datatime.getDate()>=10? datatime.getDate():"0"+ datatime.getDate()} ${datatime.getHours()>=10? datatime.getHours():"0"+ datatime.getHours()}:${datatime.getMinutes()>=10? datatime.getMinutes():"0"+ datatime.getMinutes()}:${datatime.getSeconds()>10? datatime.getSeconds():"0"+ datatime.getSeconds()}</td>
+                                <td class="text-blue">${element.signStatus == 0?"--":element.hetongStartTime+" 至 "+element.hetongEndTime}</td>
+                                
+                               <td class="text-blue">${element.signStatus == 0?"--": element.signTime}</td>
+                                <td class="membership-edit">
+                                    
+                                    ${element.status==1?`
+                                     <a href="edit_people.html?item=nav-line-11&id=${element.id}"  style="font-size:14px;">编辑</a>
+                                    <a  href="sign_contact.html?item=nav-line-11&id=${element.id}"  style="font-size:14px;">签署合同</a>
+                                    `:`     
+                                     <a href="#" data-showmodal='agree-people-modal' data-id=${element.id} class="user-edit padd-agree-yes-not" data-modalclass="padd-agree-btn" style="font-size:14px;">同意</a>
+                                      <a  class="user-edit padd-agree-yes-not" data-showmodal='not-agree-people-modal'  data-id=${element.id} data-modalclass="padd-agree-not-btn" style="font-size:14px;">驳回</a>`}
+                                      
+                                   
+                                      
+                                </td>`
+                    );
+                    tr_fram.appendChild(tr);
+                }
+
+                $("#tbody").html(tr_fram);
+
+            }
+        });
+
 
     },
     searchSome: function () {
         //上面搜索框
-    },
-    Atte_msg: function () {
-        //点击编辑  
-        //认证信息 显示数据
-        //    var form = new FormData();
-        //     form.append("uid", uid); // 
+        $("#padd_search_btn").click(function (e) {
+            e.preventDefault();
+            var role = $(".role").val();
+            var status = $(".status").val();
+            var number = $(".number").val();
+            var nickname = $(".nickname").val();
+            var form = new FormData();
+            form.append("role", role); // 
+            form.append("status", status); // 
+            form.append("nickname", nickname); // 
+            form.append("number", number); // 
+            form.append("page", 1); // 
+            People_add.pagesFuc(1, form);
+        });
 
-        //     fetch(server + "/user/my_info", {
-        //         method: 'POST',
-        //         headers: { 'Accept': 'application/json',
-        //        'Content-Type': 'application/json'},
-        //         mode: 'cors',
-        //         cache: 'default',
-        //         body: form
-        //     }).then((response) => response.json()).then(function (data) {
-        //         //console.log(data);
-        //         if (data.code == 200) {
-        //             console.log(data);
-        //         }
-        //     });
+    },
+    Atte_msg: function (uid) {
+        var form = new FormData();
+        form.append("uid", uid); // 
+
+        fetch(server + "check/getAuthentication", {
+            method: 'POST',
+            //      headers: { 'Accept': 'application/json',
+            //      'Content-Type': 'application/json'},
+            mode: 'cors',
+            cache: 'default',
+            body: form
+        }).then((response) => response.json()).then(function (data) {
+            //console.log(data);
+            if (data.code == 200) {
+                $(".img-logo-src").attr("src", data.data.icon);
+                $('.number-in').html(data.data.number);
+                $('.nickName-in').html(data.data.nickName);
+                $(".mobile-in").html(data.data.mobile);
+
+                $(".img-logo-src").attr("src", data.data.icon);
+                $('.gender-in').html(data.data.userAuthentication.gender == 0 ? "保密" : data.data.userAuthentication.gender == 1 ? "男" : "女");
+                $('.age-in').html(data.data.userAuthentication.age);
+                $(".realName-in").html(data.data.userAuthentication.realName);
+                $(".idCard-in").html(data.data.userAuthentication.idCard);
+                $(".picIdFront-in").css("background", " url(" + data.data.userAuthentication.picIdFront + ") no-repeat");
+                $(".picIdBack-in").css("background", " url(" + data.data.userAuthentication.picIdBack + ") no-repeat");
+            }
+        });
 
     },
     Sign_contact: function () {
@@ -1090,24 +1393,43 @@ var People_add = {
 
     },
     Edit_agree: function () {
-        //同意或者驳回
+        // 同意或者驳回
+        $("#tableSort").on("click", ".padd-agree-yes-not", function (e) {
+            e.preventDefault();
 
-        //    var form = new FormData();
-        //     form.append("uid", uid); // 
+            $("." + $(this).data("showmodal")).find(".padd-agree-btn").attr("data-id", $(this).data("id"));
 
-        //     fetch(server + "/user/my_info", {
-        //         method: 'POST',
-        //         headers: { 'Accept': 'application/json',
-        //        'Content-Type': 'application/json'},
-        //         mode: 'cors',
-        //         cache: 'default',
-        //         body: form
-        //     }).then((response) => response.json()).then(function (data) {
-        //         //console.log(data);
-        //         if (data.code == 200) {
-        //             console.log(data);
-        //         }
-        //     });
+
+        })
+        $(".padd-agree-btn").click(function (e) {
+            e.preventDefault();
+            var id = $(this).data("id");
+            var status = $(this).data("status");
+            var form = new FormData();
+            form.append("id", id); // 
+            form.append("status", status); // 
+            fetch(server + "check/checkAnchor", {
+                method: 'POST',
+
+                mode: 'cors',
+                cache: 'default',
+                body: form
+            }).then((response) => response.json()).then(function (data) {
+                //console.log(data);
+                if (data.code == 200) {
+                    $('.modal-log-box').hide();
+                    showInfo("操作成功");
+                    setTimeout(function () {
+                        window.location.reload();
+                    }, 300);
+
+
+                } else {
+                    showInfo(data.message)
+                }
+            });
+        });
+
     }
 
 

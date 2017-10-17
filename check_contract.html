@@ -22,6 +22,17 @@
     <script src="js/html5shiv.min.js"></script>
     <script src="js/respond.min.js"></script>
     <![endif]-->
+    <style>
+        .img-box{
+            width: 50%;
+            margin: 10px auto;
+
+        }
+         .img-box>img{
+             display: block;
+             width: 100%;
+         }
+    </style>
 </head>
 
 <body>
@@ -164,7 +175,9 @@
                         </li>
                     </ul>
                 </div>-->
-               
+                    <div class="img-box">
+                        <img src="" alt="">
+                    </div>
             </div>
 
 
@@ -185,11 +198,16 @@
     <script src="js/tableSort.js"></script>
     <script src="js/nomoJS.js"></script>
     <script src="js/gimi.js"></script>
+    <script src="js/jquery.cookie.js"></script>
+    <script src="js/fetch.js"></script>
+    <script src="js/paging.js"></script>
+    <script src="js/jz_admin.js"></script>
     <script>
            $(function () { 
                $(".radio-box input").click(function () {  
                     $("."+$(this).data("item")).show().siblings(".img-file-box-con").hide();
                });
+               Membership.Check_contract();
             });
     </script>
 

@@ -523,7 +523,7 @@ input[type=checkbox].checkbix+label>span {
     width: 70vw;
     position: absolute;
     top: 30%;
-    left: 50%;
+    left: 60%;
     margin-left: -35vw;
     border-radius: .04rem;
     z-index: 110;
